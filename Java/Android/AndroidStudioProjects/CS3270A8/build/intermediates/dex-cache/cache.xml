@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="C:\Users\JamesPainter\AndroidStudioProjects\CS3270A8\app\libs\gson-2.2.4.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="a60a5e993c98c864010053cb901b7eab25306568">
+        <dex dex="C:\Users\JamesPainter\AndroidStudioProjects\CS3270A8\app\build\intermediates\transforms\dex\debug\folders\1000\2\gson-2.2.4_ba49ba79a8fbd2ffd1bf42db5d3e792999a007d3\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\JamesPainter\AndroidStudioProjects\CS3270A8\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="0769197731a67b03b4e595c4d3052afffd91105a">
+        <dex dex="C:\Users\JamesPainter\AndroidStudioProjects\CS3270A8\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_1817fafa894491c66bc9de8b55895a64609b647d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\JamesPainter\AndroidStudioProjects\CS3270A8\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="c82741bc129dd5f99f11a4ab8666ae24262053b6">
+        <dex dex="C:\Users\JamesPainter\AndroidStudioProjects\CS3270A8\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_a5a4419d3404394866de24df19e067be52cd186f\classes.dex" />
+    </item>
+
+</items>

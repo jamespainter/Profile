@@ -1,0 +1,113 @@
+
+--Start Distributed Queries 
+
+ USE MASTER
+GO		
+Exec sp_addlinkedserver
+@server='TITAN_PAINTER',
+@srvproduct='',
+/*this is the product name of the OLE DB data source to add as a linked server.*/
+@provider='MSDASQL',
+@provstr='DRIVER={SQL Server};SERVER=titan.cs.weber.edu,10433;UID=JamesPainter;PWD=Rpaint14;Initial Catalog=Painter_FARMS' --Note I created this user for my hotel database.
+GO
+Exec sp_serveroption 'TITAN_PAINTER', 'data access', 'true'
+Exec sp_serveroption 'TITAN_PAINTER', 'rpc', 'true'--enables from the REMOTE to LOCAL server
+Exec sp_serveroption 'TITAN_PAINTER', 'rpc out', 'true' -- enables from the LOCAL to REMOTE server
+Exec sp_serveroption 'TITAN_PAINTER', 'collation compatible', 'true'
+GO
+Exec sp_addlinkedsrvlogin 'TITAN_PAINTER', 'true'
+GO
+Exec sp_addlinkedsrvlogin
+@rmtsrvname='TITAN', --this is the name of the linked server
+@useself='false',--True means that sql server logins are used, false means that the rmtuser and rmtpassword are used
+--@locallogin='Rich\Rich-Fry',
+ --login on the local server, default is NULL.
+@rmtuser='JamesPainter', --name of the remote user
+@rmtpassword='Rpainter' --remote user password
+GO
+--sp_configure 'show advanced options', 1
+--reconfigure
+--GO
+
+--sp_configure 'Ad Hoc Distributed Queries', 1
+--reconfigure
+GO
+--END Distributed Queries
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE SPECIFIC_NAME = 'sp_GuestLookup')
+	DROP PROCEDURE sp_GuestLookup
+GO
+
+CREATE PROCEDURE sp_GuestLookup
+--variables 
+	@FirstName varchar(20),
+	@LastName	varchar(20),
+	@PlayerID	smallint
+AS
+BEGIN 
+		 
+			DECLARE @result1 varchar(30)
+			SET @result1 = ''
+			SET @result1 = (SELECT passthrough.GuestFirstName  
+			FROM OPENQUERY(TITAN_PAINTER, 'SELECT * FROM Painter_Farms.dbo.GUEST')AS passthrough
+			WHERE passthrough.GuestFirstName = @FirstName)
+			
+			DECLARE @result varchar(30)
+			SET @result = ''
+			SET @result = (SELECT passthrough.GuestLastName  
+			FROM OPENQUERY(TITAN_PAINTER, 'SELECT * FROM Painter_Farms.dbo.GUEST')AS passthrough
+			WHERE passthrough.GuestLastName = @LastName)
+			
+			DECLARE @GuestID smallint 
+			DECLARE @PlayerAddress varchar(50) 
+			DECLARE @PlayerCity varchar(30) 
+			DECLARE @PlayerPostalCode char(10)
+			DECLARE @PlayerCountry	varchar(20)
+			DECLARE @PlayerPhone	varchar(20) 
+
+			IF(@result1 = @FirstName AND @result = @LastName)
+			BEGIN 
+
+					SET @GuestID = (SELECT passthrough.GuestID  
+					FROM OPENQUERY(TITAN_PAINTER, 'SELECT * FROM Painter_Farms.dbo.GUEST')AS passthrough
+					WHERE passthrough.GuestFirstName = @FirstName AND passthrough.GuestLastName  = @LastName)
+					
+					SET @PlayerAddress = (SELECT passthrough.GuestAddress1  
+					FROM OPENQUERY(TITAN_PAINTER, 'SELECT * FROM Painter_Farms.dbo.GUEST')AS passthrough
+					WHERE passthrough.GuestFirstName = @FirstName AND passthrough.GuestLastName  = @LastName)
+
+					SET @PlayerCity = (SELECT passthrough.GuestCity  
+					FROM OPENQUERY(TITAN_PAINTER, 'SELECT * FROM Painter_Farms.dbo.GUEST')AS passthrough
+					WHERE passthrough.GuestFirstName = @FirstName AND passthrough.GuestLastName  = @LastName)
+
+					SET @PlayerPostalCode = (SELECT passthrough.GuestPostalCode  
+					FROM OPENQUERY(TITAN_PAINTER, 'SELECT * FROM Painter_Farms.dbo.GUEST')AS passthrough
+					WHERE passthrough.GuestFirstName = @FirstName AND passthrough.GuestLastName  = @LastName)
+
+					SET @PlayerCountry = (SELECT passthrough.GuestCountry 
+					FROM OPENQUERY(TITAN_PAINTER, 'SELECT * FROM Painter_Farms.dbo.GUEST')AS passthrough
+					WHERE passthrough.GuestFirstName = @FirstName AND passthrough.GuestLastName  = @LastName)
+
+					SET @PlayerPhone = (SELECT passthrough.GuestPhone 
+					FROM OPENQUERY(TITAN_PAINTER, 'SELECT * FROM Painter_Farms.dbo.GUEST')AS passthrough
+					WHERE passthrough.GuestFirstName = @FirstName AND passthrough.GuestLastName  = @LastName)
+
+
+					UPDATE GOLF_PLAYER 
+					SET GuestID = @GuestID, PlayerAddress = @PlayerAddress, PlayerCity = @PlayerCity, PlayerPostalCode = @PlayerPostalCode, PlayerCountry = @PlayerCountry, PlayerPhone = @PlayerPhone
+					WHERE PlayerID = @PlayerID
+
+					
+			END
+			ELSE
+			BEGIN 
+				RETURN 0 
+			END
+
+END 
+
+
+--TEST SPROC
+
+EXEC sp_GuestLookup @FirstName, @LastName, @PlayerID

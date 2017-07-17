@@ -1,0 +1,49 @@
+﻿<Window x:Name="wnd_main" x:Class="CS3270A5.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CS3270A5"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded">
+
+    <Grid>
+        <Image x:Name="img_nemoStartPage" Margin="-1,8,-3,-1.2" Source="nemoStartPage.jpg" Stretch="Fill"/>
+        <Image x:Name="img_ActualNemo" Source="Nemo-FN.png" Margin="-102,123,213,-23.2">
+            <Image.RenderTransform>
+                <RotateTransform x:Name="AnimatedRotateTransform" Angle="0" />
+            </Image.RenderTransform>
+            <Image.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="AnimatedRotateTransform" 
+                                                 Storyboard.TargetProperty="Angle"
+                                                 By="45"   
+                                                 To="225" 
+                                                 Duration="0:0:4" 
+                                                 FillBehavior="Stop" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Image.Triggers>
+        </Image>
+        <DockPanel HorizontalAlignment="Left" Height="346" LastChildFill="False" Margin="-2,-21,0,-2.2" VerticalAlignment="Top" Width="522"/>
+
+        <DockPanel x:Name="menu_options" Margin="-2,-1,2,0.8">
+            <Menu DockPanel.Dock="Top" Background="#FF3F3B3B" Foreground="#FFFAF9F9" Margin="0,0,-2,0">
+                <MenuItem Header="_Options" Foreground="#FFFAF9F9">
+                    <MenuItem Header="_Edit/Enter User Info" Foreground="#FF0E0E0E" Click="MenuItem_Click_2"/>
+                    <MenuItem Header="_Play Game" Foreground="#FF121111" Click="MenuItem_Click_1"/>
+                    <MenuItem Header="_Exit" Foreground="#FF0F0F0F" Click="MenuItem_Click"/>
+                </MenuItem>
+            </Menu>
+            <StackPanel/>
+        </DockPanel>
+        <Image x:Name="Shark_png" Margin="271,190,-38,-28.2" Source="Shark.png" Stretch="Fill"/>
+        <Button x:Name="btn_edit_user_info" Content="Add User Info." HorizontalAlignment="Left" Height="59" Margin="203,228,0,0" VerticalAlignment="Top" Width="144" Background="#FFDB8E6C" BorderBrush="#FFF26E4D" Foreground="#FF1E46B0" FontFamily="Snap ITC" BorderThickness="3" FontSize="16" Click="btn_edit_user_info_Click" Visibility="Hidden"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="26" Margin="254,291,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="83" Visibility="Hidden"/>
+        <Button x:Name="btn_start_game" Content="Play Game" HorizontalAlignment="Left" Height="57" Margin="200,154,0,0" VerticalAlignment="Top" Width="148" Background="#FFDB8E6C" BorderBrush="#FFF26E4D" Foreground="#FF1E46B0" FontFamily="Snap ITC" FontSize="16" BorderThickness="3" Click="btn_start_game_Click" Visibility="Hidden"/>
+    </Grid>
+
+</Window>

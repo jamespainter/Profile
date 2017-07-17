@@ -1,0 +1,17 @@
+--START FUNCTION dbo.ApplyDiscount
+IF EXISTS(SELECT name FROM sys.objects WHERE name = N'dbo.ApplyDiscount')
+DROP FUNCTION dbo.ApplyDiscount
+GO
+	
+CREATE FUNCTION dbo.ApplyDiscount(@TeeTimeID int)
+	RETURNS smallint 
+	AS
+	BEGIN 
+
+		DECLARE @Discount smallint 
+		SET @Discount = 0 
+		SET @Discount = (SELECT TeeTimeAmount FROM TEE_TIME WHERE TeeTimeID = @TeeTimeID)* .20; 
+		RETURN @Discount
+
+	END
+--END Function dbo.ApplyDiscount	

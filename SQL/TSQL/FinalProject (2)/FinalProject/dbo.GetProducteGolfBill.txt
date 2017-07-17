@@ -1,0 +1,49 @@
+--START dbo.ProduceGolfBill
+IF EXISTS(SELECT name FROM sys.objects WHERE name = N'dbo.ProduceGolfBill')
+DROP FUNCTION dbo.ProduceGolfBill
+GO
+	
+CREATE FUNCTION dbo.ProduceGolfBill(@GFolioID int)
+	RETURNS @ProduceBill TABLE 
+	(	
+		[GFolioID] [int] NULL,
+		[Name] [varchar](90) NOT NULL, 
+		[Address] [varchar](90) NOT NULL, 
+		[Phone]	[varchar](90) NOT NULL,
+		[CheckInDate] [date] NOT NULL,
+		
+		[GFolioBillingID] [int] NOT NULL, 
+		[BillingCategoryID] [int] NOT NULL, 
+		[BillingDescription] [varchar](200) NOT NULL, 
+		[BillingItemDate] [date] NOT NULL, 
+		[Total]	  [smallmoney] NULL 
+
+	)
+	AS
+	BEGIN
+			DECLARE @Tax decimal(6,4)
+			SET @Tax =(SELECT passthrough.SalesTaxRate FROM OPENQUERY(TITAN_PAINTER, 'SELECT * FROM Painter_Farms.dbo.TAXRATE')AS passthrough
+						WHERE passthrough.TaxLocationID = 1)
+			
+
+			
+
+			INSERT INTO  @ProduceBill	SELECT gf.GFolioID, gp.PlayerFirstName + ' ' + gp.PlayerLastName, ' ' +
+		    (gp.PlayerAddress + CHAR(13) + CHAR(10) + gp.PlayerCity +  ', ' + gp.PlayerPostalCode + ' '+ CHAR(13) + CHAR(10)  + gp.PlayerCountry),
+			gp.PlayerPhone, gf.TeeTimeCheckinDate ,bd.GFolioBillingID,bd.BillingCategoryID, bd.BillingDescription, bd.BillingItemDate, (bd.BillingItemQty * bd.BillingAmount) + @Tax
+			FROM GOLF_PLAYER gp
+			JOIN GOLF_FOLIO gf 
+			ON gp.PlayerID = gf.PlayerID
+			JOIN BILLING_DETAILS bd 
+			ON gf.GFolioID = bd.GFolioID
+			JOIN BILLING_CATEGORY bc
+			ON bd.BillingCategoryID = bc.BillingCategoryID
+			WHERE gf.GFolioID = @GFolioID
+
+	RETURN 
+	END
+--END dbo.ProduceGolfBill
+
+-- TEST UDF
+
+--SELECT * FROM dbo.ProduceGolfBill(1501)

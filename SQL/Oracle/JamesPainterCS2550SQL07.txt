@@ -1,0 +1,151 @@
+James Painter
+10/23/2014
+CS2550 SQL 07
+
+/*1*/
+SELECT i.LAST_NAME, i.FIRST_NAME
+FROM instructor i
+WHERE i.INSTRUCTOR_ID NOT IN
+      (SELECT s.instructor_id
+      FROM  section s, GRADE_TYPE_WEIGHT gw
+      WHERE s.section_id = gw.SECTION_ID
+      AND gw.GRADE_TYPE_CODE = 'HM');
+
+/*2*/
+
+SELECT COUNT(*)AS "BELOW AVERAGE"
+FROM(SELECT Distinct student_id
+FROM grade
+ WHERE GRADE_TYPE_CODE = 'HM'
+      AND SECTION_ID = 154
+AND numeric_grade <
+      (SELECT AVG(numeric_grade)
+      FROM grade 
+      WHERE GRADE_TYPE_CODE = 'HM'
+      AND SECTION_ID = 154)) ;
+
+/*3*/
+
+SELECT DISTINCT z.city, z.state
+FROM zipcode z, student s, enrollment e
+WHERE  z.zip = s.zip
+AND s.student_ID = e.STUDENT_ID
+GROUP BY z.state, z.city
+HAVING count (*) =
+  (SELECT MIN(Enroll)
+    FROM
+        (SELECT Count(*) AS Enroll 
+        FROM zipcode z, student s, enrollment e
+        WHERE  z.zip = s.zip
+        AND s.student_ID = e.STUDENT_ID
+        GROUP BY z.state, z.city))
+        ;
+
+/*4*/
+SELECT  s.STUDENT_ID, s.FIRST_NAME, s.LAST_NAME, g.NUMERIC_GRADE
+FROM student s, enrollment e, grade g
+WHERE s.STUDENT_ID = e.STUDENT_ID
+AND e.STUDENT_ID = g.STUDENT_ID
+AND e.SECTION_ID = g.SECTION_ID
+AND g.GRADE_TYPE_CODE = 'MT'
+AND e.SECTION_ID = 156
+AND g.NUMERIC_GRADE IN
+    (SELECT min(numeric_grade) 
+    FROM grade
+    WHERE GRADE_TYPE_CODE = 'MT'
+    AND Section_ID = 156)
+    Order by s.STUDENT_ID
+;
+
+/*5*/
+SELECT s.STUDENT_ID, s.Last_name, s.first_name
+    FROM student s,enrollment e, section s, course c
+    WHERE s.STUDENT_ID = e.student_ID
+    AND e.SECTION_ID = s.SECTION_ID
+    AND s.COURSE_NO = c.COURSE_NO
+    GROUP BY s.STUDENT_ID,  c.COURSE_NO,s.first_name, s.Last_name
+    HAVING COUNT (*) > 1
+    ORDER BY s.student_ID;
+
+/*6*/
+ SELECT  st.FIRST_NAME, st.LAST_NAME
+ FROM section s, enrollment e, student st
+    WHERE s.SECTION_ID = e.SECTION_ID
+    AND e.student_id = st.student_ID
+    AND COURSE_NO BETWEEN 200 AND 299
+    GROUP BY e.student_ID, st.FIRST_NAME, st.LAST_NAME
+    HAVING COUNT(*) IN
+ (SELECT Min(FEW)
+ FROM
+    (SELECT COUNT(*) AS FEW
+    FROM section s, enrollment e, student st
+    WHERE s.SECTION_ID = e.SECTION_ID
+    AND e.student_id = st.student_ID
+    AND COURSE_NO BETWEEN 200 AND 299
+    GROUP BY e.STUDENT_ID, st.FIRST_NAME, st.LAST_NAME))
+ORDER BY st.LAST_NAME
+;
+
+/*7*/
+
+SELECT c.course_NO, c.DESCRIPTION
+FROM enrollment e, section s, course c 
+WHERE e.SECTION_ID = s.SECTION_ID
+AND s.COURSE_NO = c.COURSE_NO
+GROUP BY c.COURSE_NO, c.DESCRIPTION
+HAVING COUNT(*) IN
+	(SELECT MIN(Enrolled_Students)
+	FROM
+	(SELECT  COUNT(*) AS Enrolled_Students
+	FROM enrollment e, section s, course c 
+	WHERE e.SECTION_ID = s.SECTION_ID
+	AND s.COURSE_NO = c.COURSE_NO
+	GROUP BY c.COURSE_NO, c.DESCRIPTION))
+Order BY c.COURSE_NO
+;
+
+/*8*/
+SELECT st.FIRST_NAME, st.LAST_NAME, c.DESCRIPTION
+FROM course c, section s, enrollment e, student st
+    WHERE c.COURSE_NO = s.COURSE_NO
+    AND s.SECTION_ID = e.SECTION_ID 
+    AND e.student_ID = st.STUDENT_ID
+    AND TO_CHAR(START_DATE_TIME, 'HH:MI AM') = '10:30 AM'
+AND e.STUDENT_ID IN
+    (SELECT e.STUDENT_ID 
+    FROM section s, enrollment e
+    WHERE s.SECTION_ID = e.SECTION_ID 
+    AND TO_CHAR(START_DATE_TIME, 'HH:MI AM') = '10:30 AM')
+    ORDER BY st.LAST_NAME
+;
+
+/*9*/
+SELECT distinct s.FIRST_NAME, s.LAST_NAME 
+FROM Student s, enrollment e, grade g
+WHERE s.STUDENT_ID = e.STUDENT_ID
+AND e.STUDENT_ID = g.STUDENT_ID
+AND e.SECTION_ID = g.SECTION_ID
+AND g.GRADE_TYPE_CODE = 'FI'
+AND g.SECTION_ID = 154
+AND g.NUMERIC_GRADE <
+    (SELECT AVG(g.NUMERIC_GRADE)
+    FROM Student s, enrollment e, grade g
+    WHERE s.STUDENT_ID = e.STUDENT_ID
+    AND e.STUDENT_ID = g.STUDENT_ID
+    AND e.SECTION_ID = g.SECTION_ID
+    AND g.GRADE_TYPE_CODE = 'FI'
+    AND g.SECTION_ID = 154)
+;
+
+/*10*/
+SELECT st.first_NAME, st.last_name
+FROM section s, enrollment e, student st 
+    WHERE s.SECTION_ID = e.SECTION_ID
+    AND e.student_id = st.STUDENT_ID
+    AND s.COURSE_NO IN (144, 204, 210, 220, 420, 450)
+    AND st.student_ID in
+    (SELECT e.STUDENT_ID 
+    FROM section s, enrollment e 
+    WHERE s.SECTION_ID = e.SECTION_ID 
+    AND s.COURSE_NO IN (144, 204, 210, 220, 420, 450))
+;

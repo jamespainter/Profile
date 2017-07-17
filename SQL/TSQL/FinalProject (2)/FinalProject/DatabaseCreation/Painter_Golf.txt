@@ -1,0 +1,970 @@
+-- Student GOLF Creation Script
+-- James Painter 7/24/2016
+-- Comments
+
+USE Master 
+
+IF EXISTS(SELECT * FROM sysdatabases WHERE name ='Painter_GOLF')
+DROP DATABASE Painter_GOLF
+
+GO
+
+CREATE DATABASE Painter_GOLF
+
+ON PRIMARY 
+
+(
+NAME = 'Painter_FARMS', 
+--FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL11.MSSQLSERVER\MSSQL\DATA\Painter_GOLF.mdf',
+FILENAME = 'C:\Stage\Painter_GOLF.mdf',
+SIZE = 4MB, 
+MAXSIZE = 4MB,
+FILEGROWTH= 500KB
+)
+
+LOG ON 
+
+(
+NAME = 'Painter_GOLF_Log', 
+FILENAME = 'C:\Stage\Painter_GOLF.ldf',
+SIZE = 4MB, 
+MAXSIZE = 4MB, 
+FILEGROWTH = 500KB
+)
+Go
+
+USE Painter_GOLF
+
+GO
+
+CREATE TABLE GOLF_DISCOUNT
+(
+	GDiscountID				smallint NOT NULL  IDENTITY(1,1), 
+	DiscountDescription		varchar(50) NOT NULL, 
+	DiscountExpiration		smalldatetime NOT NULL,
+	DiscountRules			varchar(100) NULL, 
+	DiscountPercent			decimal(4,2) NULL, 
+	DiscountAmount			smallmoney NULL, 
+
+)
+
+
+
+CREATE TABLE GOLF_COURSE
+(
+
+	GCCourseID		smallint  NOT NULL IDENTITY(1600,1),
+	GCCourseName	varchar(50) NOT NULL,  
+	GCCourseAddress	varchar(50) NOT NULL, 
+	GCRating		char(1) NOT NULL, 
+	GCCity			varchar(50) NOT NULL, 
+	GCState			char(20)	NULL, 
+	GCCountry		varchar(50) NOT NULL, 
+	GCPostalCode	char(50) NOT NULL, 
+	GCPictureLink	varchar(100) NULL,
+	DressCode		char(2) NOT NULL 
+
+)
+
+
+CREATE TABLE BILLING_CATEGORY
+(
+	BillingCategoryID		smallint	NOT NULL IDENTITY(1,1) , 
+	BillingCatDescription	varchar(30) NOT NULL, 
+	BillingCatTaxable		bit NOT NULL 
+
+)
+
+CREATE TABLE PACKAGE
+(
+	PackageID			smallint NOT NULL IDENTITY(1,1), 
+	PackageAmount		smallmoney NOT NULL, 
+	PackageStartDate	smalldatetime NOT NULL, 
+	PackageEndDate		smalldatetime NOT NULL, 
+	Rounds				smallint	NOT NULL, 
+	PackageDescription	varchar(200) NULL, 
+	People				smallint	NULL, 
+	GolfClubs			smallint	NULL, 
+	CartsRented			smallint	NULL, 
+	Caddy				bit		NULL
+
+)
+--- TAXRATE Table FROM Painter_FARMS DATBASE
+
+CREATE TABLE TAXRATE
+(
+
+	TaxLocationID		smallint NOT NULL IDENTITY(1,1), 
+	TaxDescription		varchar(30) NOT NULL,	
+	RoomTaxRate			decimal(6,4) NOT NULL, 
+	SalesTaxRate		decimal(6,4) NOT NULL, 
+	TeeTimeTaxRate		decimal(6,4) NOT NULL
+
+)
+
+--- Hotel Table FROM Painter_FARMS DATBASE
+
+CREATE TABLE HOTEL
+(
+HotelID				smallint NOT NULL, 
+HotelName			varchar(30) NOT NULL, 
+HotelAddress		varchar(30) NOT NULL, 
+HotelCity			varchar(20)	NOT NULL, 
+HotelState			varchar(2)	NULL, 
+HotelCountry		varchar(20) NOT NULL, 
+HotelPostalCode		char(10) NOT NULL, 
+HotelStarRating		char(1) NULL, 
+HotelPictureLink	varchar(100) NULL, 
+TaxLocationID		smallint NOT NULL
+)
+
+CREATE TABLE GOLF_PLAYER
+(
+PlayerID			smallint NOT NULL IDENTITY(1,1), 
+PlayerFirstName		varchar(20) NOT NULL, 
+PlayerLastName		varchar(20) NOT NULL,
+GuestID				smallint	NOT NULL, 
+Handicap			smallint	NULL, 
+PlayerAddress		varchar(50) NOT NULL, 
+PlayerCity			varchar(50) NOT NULL, 
+PlayerPostalCode	char(10) NOT NULL, 
+PlayerCountry		varchar(50) NOT NULL, 
+PlayerPhone			varchar(50) NOT NUll 
+
+)
+
+
+
+
+CREATE TABLE GOLF_FOLIO 
+(
+
+	GFolioID			smallint NOT NULL IDENTITY(1500,1),
+	HotelID				smallint NOT NULL,
+	PlayerID			smallint NOT NULL,   
+	QuotedRate			smallmoney NOT NULL, 
+	TeeTimeCheckinDate	smalldatetime NOT NULL, 
+	Status				char(1)	NOT NULL, 
+	Comments			varchar(200) NULL, 
+	GolfingDays			smallint	NOT NULL, 
+	GDiscountID			smallint	NOT NULL
+
+)
+
+
+
+CREATE TABLE BILLING_DETAILS
+(
+	GFolioBillingID		smallint  NOT NULL IDENTITY(1,1), 
+	GFolioID			smallint  NOT NULL, 
+	BillingCategoryID	smallint  NOT NULL, 
+	BillingDescription	varchar(30) NOT NULL, 
+	BillingAmount		smallmoney	NOT NULL, 
+	BillingItemQTY		smallint NOT NULL,
+	BillingItemDate		smalldatetime NOT NULL
+
+)
+
+
+CREATE TABLE TEE_TIME 
+(
+
+	TeeTimeID			smallint NOT NULL IDENTITY(1,1), 
+	PackageID			smallint NOT NULL, 
+	GCCourseID			smallint NOT NULL, 
+	TeeTimeAmount		smallmoney NOT NULL, 
+	TeeTimeStartTime	smalldatetime NOT NULL, 
+	TeeTimeEndTime		smalldatetime NOT NULL, 
+	TeeTimeDescription	char(3)	NOT NULL,
+	AppropriateDressCode char(1) NOT NULL
+	
+
+)
+
+
+
+
+CREATE TABLE TEE_TIME_DETAILS
+(
+	TeeTimeDetailID		smallint NOT NULL IDENTITY(1,1),
+	GFolioID			smallint NOT NULL,  
+	TeeTimeID			smallint NOT NULL,  
+	TeeTimeDetailDate	smalldatetime NOT NULL, 
+	TeeTimeNumber		smallint NOT NULL
+)
+
+
+
+
+CREATE TABLE CART_DETAILS
+(
+
+	CartDetailID	smallint NOT NULL IDENTITY(1,1), 
+	PackageID		smallint NOT NULL, 
+	CartID			smallint NOT NULL, 
+	CartResDate		smalldatetime NOT NULL, 
+	CartStartTime   smalldatetime NOT NULL, 
+	CartEndDate		smalldatetime	NOT NULL, 
+	CartNumber		smallint		NOT NULL -- Number of Carts
+
+)
+
+
+CREATE TABLE CART
+(
+	CartID			smallint NOT NULL IDENTITY(1,1), 
+	CartAmount		smallmoney NOT NULL, 
+	CartCondition	char(1) NOT NULL --(p,f,g,e)
+
+)
+
+
+-- Create Primary Keys
+
+ALTER TABLE GOLF_DISCOUNT
+	ADD CONSTRAINT PK_GDiscountID
+	PRIMARY KEY		(GDiscountID) 
+
+ALTER TABLE	GOLF_COURSE 
+	ADD CONSTRAINT PK_GCCourseID
+	PRIMARY KEY		(GCCourseID)
+
+ALTER TABLE BILLING_CATEGORY
+	ADD CONSTRAINT PK_BillingCategory
+	PRIMARY KEY		(BillingCategoryID)
+
+-- TAXRATE TABLE FROM PAINTER_FARMS DATABASE 
+ALTER TABLE TAXRATE
+	ADD CONSTRAINT PK_TRTaxLocationID
+	PRIMARY KEY (TaxLocationID)
+
+--- Hotel Table FROM Painter_FARMS DATBASE
+ALTER TABLE HOTEL
+	ADD CONSTRAINT PK_HHotelID
+	PRIMARY KEY	(HotelID) 
+
+
+
+ALTER TABLE GOLF_FOLIO
+	ADD CONSTRAINT	PK_GFolioID
+	PRIMARY KEY (GFolioID)
+
+
+ALTER TABLE BILLING_DETAILS
+	ADD CONSTRAINT PK_GFolioBillingID
+	PRIMARY KEY (GFolioBillingID) 
+
+ALTER TABLE TEE_TIME
+	ADD CONSTRAINT PK_TeeTimeID
+	PRIMARY KEY (TeeTimeID) 
+
+ALTER TABLE PACKAGE 
+	ADD CONSTRAINT PK_PackageID
+	PRIMARY KEY (PackageID) 
+
+ALTER TABLE TEE_TIME_DETAILS
+	ADD CONSTRAINT PK_TeeTimeDetailID
+	PRIMARY KEY (TeeTimeDetailID)
+
+
+ALTER TABLE CART_DETAILS
+	ADD CONSTRAINT PK_CartDetailID
+	PRIMARY KEY (CartDetailID) 
+
+ALTER TABLE CART
+	ADD CONSTRAINT PK_CartID
+	PRIMARY KEY (CartID)
+
+ALTER TABLE GOLF_PLAYER
+	ADD CONSTRAINT PK_PlayerID
+	PRIMARY KEY (PlayerID)
+
+-- CREATE FOREIGN KEYS 
+
+
+--- Hotel Table FROM Painter_FARMS DATBASE
+ALTER TABLE HOTEL
+ADD
+CONSTRAINT FK_HTaxLocationID
+FOREIGN KEY (TaxLocationID)	REFERENCES TAXRATE (TaxLocationID)
+ON UPDATE Cascade
+ON DELETE Cascade
+
+
+
+
+ALTER TABLE GOLF_FOLIO
+ADD
+CONSTRAINT FK_HotelID
+FOREIGN KEY (HotelID) REFERENCES HOTEL (HotelID)
+ON UPDATE CASCADE
+ON DELETE CASCADE,
+
+
+CONSTRAINT FK_GDiscountID
+FOREIGN KEY (GDiscountID) REFERENCES GOLF_DISCOUNT (GDiscountID)
+ON UPDATE CASCADE
+ON DELETE CASCADE, 
+
+CONSTRAINT FK_PlayerID
+FOREIGN KEY (PlayerID) REFERENCES GOLF_PLAYER (PlayerID)
+ON UPDATE CASCADE
+ON DELETE CASCADE
+
+
+ALTER TABLE TEE_TIME 
+ADD 
+CONSTRAINT FK_GCCourseID
+FOREIGN KEY (GCCourseID) REFERENCES GOLF_COURSE (GCCourseID)
+ON UPDATE CASCADE
+ON DELETE CASCADE,
+
+
+CONSTRAINT FK_PackageID
+FOREIGN KEY (PackageID) REFERENCES PACKAGE (PackageID)
+ON UPDATE CASCADE
+ON DELETE CASCADE
+
+
+ALTER TABLE BILLING_DETAILS
+ADD
+CONSTRAINT FK_BDGFolioID
+FOREIGN KEY (GFolioID) REFERENCES GOLF_FOLIO (GFolioID)
+ON UPDATE CASCADE
+ON DELETE CASCADE,
+
+CONSTRAINT FK_BillingCategoryID
+FOREIGN KEY (BillingCategoryID) REFERENCES BILLING_CATEGORY (BillingCategoryID)
+ON UPDATE CASCADE
+ON DELETE CASCADE
+
+ALTER TABLE TEE_TIME_DETAILS
+ADD
+CONSTRAINT FK_TTGFolioID
+FOREIGN KEY (GFolioID) REFERENCES GOLF_FOLIO (GFolioID)
+ON UPDATE CASCADE
+ON DELETE CASCADE, 
+
+CONSTRAINT FK_TTTeeTimeID
+FOREIGN KEY (TeeTimeID) REFERENCES TEE_TIME (TeeTimeID)
+ON UPDATE CASCADE
+ON DELETE CASCADE 
+
+
+ALTER TABLE CART_DETAILS 
+ADD 
+CONSTRAINT FK_CDPackageID
+FOREIGN KEY (PackageID) REFERENCES PACKAGE (PackageID)
+ON UPDATE CASCADE
+ON DELETE CASCADE, 
+
+CONSTRAINT FK_CDCartID
+FOREIGN KEY (CartID) REFERENCES CART (CartID) 
+ON UPDATE CASCADE 
+ON DELETE CASCADE
+
+
+
+
+-- Check and Balances 
+
+ALTER TABLE GOLF_FOLIO
+ADD CONSTRAINT CK_GFStatus
+CHECK(Status IN ('R','D','C','L','X')) -- R- Reserved, D - Drop Reservation, C - Complete, L- Late, X - NO SHOW 
+
+ALTER TABLE TEE_TIME
+ADD CONSTRAINT CK_TeeTimeDescription
+CHECK(TeeTimeDescription IN ('F9','B9','18')) -- F9 - Front Nine Holes, B9- Back Nine Holes, 18 - 18 holes
+
+ALTER TABLE TEE_TIME
+ADD CONSTRAINT CK_TeeTimeDressCode
+CHECK(TeeTimeDescription IN ('A','N'))  -- A - Appropriate, N - Non - Appropriate 
+
+
+ALTER TABLE CART 
+ADD CONSTRAINT CK_CartCondition
+CHECK(CartCondition IN ('p','f','g','e')) -- p - poor, f - fair, g - good, e - excellent
+
+ALTER TABLE GOLF_COURSE 
+ADD CONSTRAINT CK_DressCode 
+CHECK (DressCode IN ('C','GA','PA')) -- c - Casual , GA - Golf Attire, PA - Professional Attire  
+
+
+GO 
+
+--BULK INSERT 
+BULK INSERT TAXRATE FROM 'C:\stage\TaxRate.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+BULK INSERT HOTEL FROM 'C:\stage\Hotel.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+BULK INSERT GOLF_FOLIO FROM 'C:\stage\GOLFFolio.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+BULK INSERT GOLF_PLAYER FROM 'C:\stage\GOLF_Player.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+BULK INSERT GOLF_DISCOUNT FROM 'C:\stage\Golf_Discount.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+BULK INSERT BILLING_DETAILS FROM 'C:\stage\BILLING_DETAILS.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+BULK INSERT BILLING_CATEGORY FROM 'C:\stage\BILLING_CATEGORY.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+BULK INSERT TEE_TIME_DETAILS FROM 'C:\stage\TEE_TIME_DETAILS.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+BULK INSERT TEE_TIME FROM 'C:\stage\TeeTime.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+BULK INSERT GOLF_COURSE FROM 'C:\stage\Golf_Course.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+BULK INSERT Package FROM 'C:\stage\Package.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+BULK INSERT Cart_Details FROM 'C:\stage\Cart_Details.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+BULK INSERT Cart FROM 'C:\stage\Cart.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+
+use Painter_GOLF
+Go
+
+
+
+USE MASTER
+GO		
+Exec sp_addlinkedserver
+@server='TITAN_PAINTER',
+@srvproduct='',
+/*this is the product name of the OLE DB data source to add as a linked server.*/
+@provider='MSDASQL',
+@provstr='DRIVER={SQL Server};SERVER=titan.cs.weber.edu,10433;UID=JamesPainter;PWD=Rpaint14;Initial Catalog=Painter_FARMS' --Note I created this user for my hotel database.
+GO
+Exec sp_serveroption 'TITAN_PAINTER', 'data access', 'true'
+Exec sp_serveroption 'TITAN_PAINTER', 'rpc', 'true'--enables from the REMOTE to LOCAL server
+Exec sp_serveroption 'TITAN_PAINTER', 'rpc out', 'true' -- enables from the LOCAL to REMOTE server
+Exec sp_serveroption 'TITAN_PAINTER', 'collation compatible', 'true'
+GO
+Exec sp_addlinkedsrvlogin 'TITAN_PAINTER', 'true'
+GO
+Exec sp_addlinkedsrvlogin
+@rmtsrvname='TITAN', --this is the name of the linked server
+@useself='false',--True means that sql server logins are used, false means that the rmtuser and rmtpassword are used
+--@locallogin='Rich\Rich-Fry',
+ --login on the local server, default is NULL.
+@rmtuser='JamesPainter', --name of the remote user
+@rmtpassword='Rpainter' --remote user password
+GO
+--sp_configure 'show advanced options', 1
+--reconfigure
+--GO
+
+--sp_configure 'Ad Hoc Distributed Queries', 1
+--reconfigure
+GO
+
+
+
+
+
+
+USE Painter_GOLF
+GO 
+-------------------------------------------------------------------------------------------
+--SELECT * 
+--FROM OPENQUERY(TITAN_PAINTER, 'SELECT * FROM Painter_Farms.dbo.GUEST')AS passthrough
+
+GO
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE SPECIFIC_NAME = 'sp_GuestLookup')
+	DROP PROCEDURE sp_GuestLookup
+GO
+-- START sp_GuestLookup
+CREATE PROCEDURE sp_GuestLookup
+--variables 
+	@FirstName varchar(20),
+	@LastName	varchar(20),
+	@PlayerID	smallint
+AS
+BEGIN 
+		 
+			DECLARE @result1 varchar(30)
+			SET @result1 = ''
+			SET @result1 = (SELECT passthrough.GuestFirstName  
+			FROM OPENQUERY(TITAN_PAINTER, 'SELECT * FROM Painter_Farms.dbo.GUEST')AS passthrough
+			WHERE passthrough.GuestFirstName = @FirstName)
+			
+			DECLARE @result varchar(30)
+			SET @result = ''
+			SET @result = (SELECT passthrough.GuestLastName  
+			FROM OPENQUERY(TITAN_PAINTER, 'SELECT * FROM Painter_Farms.dbo.GUEST')AS passthrough
+			WHERE passthrough.GuestLastName = @LastName)
+			
+			DECLARE @GuestID smallint 
+			DECLARE @PlayerAddress varchar(50) 
+			DECLARE @PlayerCity varchar(30) 
+			DECLARE @PlayerPostalCode char(10)
+			DECLARE @PlayerCountry	varchar(20)
+			DECLARE @PlayerPhone	varchar(20) 
+
+			IF(@result1 = @FirstName AND @result = @LastName)
+			BEGIN 
+
+					SET @GuestID = (SELECT passthrough.GuestID  
+					FROM OPENQUERY(TITAN_PAINTER, 'SELECT * FROM Painter_Farms.dbo.GUEST')AS passthrough
+					WHERE passthrough.GuestFirstName = @FirstName AND passthrough.GuestLastName  = @LastName)
+					
+					SET @PlayerAddress = (SELECT passthrough.GuestAddress1  
+					FROM OPENQUERY(TITAN_PAINTER, 'SELECT * FROM Painter_Farms.dbo.GUEST')AS passthrough
+					WHERE passthrough.GuestFirstName = @FirstName AND passthrough.GuestLastName  = @LastName)
+
+					SET @PlayerCity = (SELECT passthrough.GuestCity  
+					FROM OPENQUERY(TITAN_PAINTER, 'SELECT * FROM Painter_Farms.dbo.GUEST')AS passthrough
+					WHERE passthrough.GuestFirstName = @FirstName AND passthrough.GuestLastName  = @LastName)
+
+					SET @PlayerPostalCode = (SELECT passthrough.GuestPostalCode  
+					FROM OPENQUERY(TITAN_PAINTER, 'SELECT * FROM Painter_Farms.dbo.GUEST')AS passthrough
+					WHERE passthrough.GuestFirstName = @FirstName AND passthrough.GuestLastName  = @LastName)
+
+					SET @PlayerCountry = (SELECT passthrough.GuestCountry 
+					FROM OPENQUERY(TITAN_PAINTER, 'SELECT * FROM Painter_Farms.dbo.GUEST')AS passthrough
+					WHERE passthrough.GuestFirstName = @FirstName AND passthrough.GuestLastName  = @LastName)
+
+					SET @PlayerPhone = (SELECT passthrough.GuestPhone 
+					FROM OPENQUERY(TITAN_PAINTER, 'SELECT * FROM Painter_Farms.dbo.GUEST')AS passthrough
+					WHERE passthrough.GuestFirstName = @FirstName AND passthrough.GuestLastName  = @LastName)
+
+
+					UPDATE GOLF_PLAYER 
+					SET GuestID = @GuestID, PlayerAddress = @PlayerAddress, PlayerCity = @PlayerCity, PlayerPostalCode = @PlayerPostalCode, PlayerCountry = @PlayerCountry, PlayerPhone = @PlayerPhone
+					WHERE PlayerID = @PlayerID
+
+					
+			END
+			ELSE
+			BEGIN 
+				RETURN 0 
+			END
+
+END  
+-- END SPROC sp_GuestLookup
+GO
+
+
+
+------------------------------------------------------------------------------------
+
+
+
+--START FUNCTION dbo.ApplyDiscount
+IF EXISTS(SELECT name FROM sys.objects WHERE name = N'dbo.ApplyDiscount')
+DROP FUNCTION dbo.ApplyDiscount
+GO
+	
+CREATE FUNCTION dbo.ApplyDiscount(@TeeTimeID int)
+	RETURNS smallint 
+	AS
+	BEGIN 
+
+		DECLARE @Discount smallint 
+		SET @Discount = 0 
+		SET @Discount = (SELECT TeeTimeAmount FROM TEE_TIME WHERE TeeTimeID = @TeeTimeID)* .20; 
+		RETURN @Discount
+
+	END
+--END Function dbo.ApplyDiscount	
+ GO
+
+
+
+ --------------------------------------------------------------------------------------
+
+
+
+--START dbo.ProduceGolfBill
+IF EXISTS(SELECT name FROM sys.objects WHERE name = N'dbo.ProduceGolfBill')
+DROP FUNCTION dbo.ProduceGolfBill
+GO
+	
+CREATE FUNCTION dbo.ProduceGolfBill(@GFolioID int)
+	RETURNS @ProduceBill TABLE 
+	(	
+		[GFolioID] [int] NULL,
+		[Name] [varchar](90) NOT NULL, 
+		[Address] [varchar](90) NOT NULL, 
+		[Phone]	[varchar](90) NOT NULL,
+		[CheckInDate] [date] NOT NULL,
+		
+		[GFolioBillingID] [int] NOT NULL, 
+		[BillingCategoryID] [int] NOT NULL, 
+		[BillingDescription] [varchar](200) NOT NULL, 
+		[BillingItemDate] [date] NOT NULL, 
+		[Total]	  [smallmoney] NULL 
+
+	)
+	AS
+	BEGIN
+			DECLARE @Tax decimal(6,4)
+			SET @Tax =(SELECT passthrough.SalesTaxRate FROM OPENQUERY(TITAN_PAINTER, 'SELECT * FROM Painter_Farms.dbo.TAXRATE')AS passthrough
+						WHERE passthrough.TaxLocationID = 1)
+			
+
+			
+
+			INSERT INTO  @ProduceBill	SELECT gf.GFolioID, gp.PlayerFirstName + ' ' + gp.PlayerLastName, ' ' +
+		    (gp.PlayerAddress + CHAR(13) + CHAR(10) + gp.PlayerCity +  ', ' + gp.PlayerPostalCode + ' '+ CHAR(13) + CHAR(10)  + gp.PlayerCountry),
+			gp.PlayerPhone, gf.TeeTimeCheckinDate ,bd.GFolioBillingID,bd.BillingCategoryID, bd.BillingDescription, bd.BillingItemDate, CASE WHEN bd.BillingAmount != 0 THEN ((bd.BillingItemQty * bd.BillingAmount) + @Tax) ELSE 0 END
+			FROM GOLF_PLAYER gp
+			JOIN GOLF_FOLIO gf 
+			ON gp.PlayerID = gf.PlayerID
+			JOIN BILLING_DETAILS bd 
+			ON gf.GFolioID = bd.GFolioID
+			JOIN BILLING_CATEGORY bc
+			ON bd.BillingCategoryID = bc.BillingCategoryID
+			WHERE gf.GFolioID = @GFolioID
+
+	RETURN 
+	END
+--END dbo.ProduceGolfBill
+
+GO
+--START TEST ProduceGOLFBILL
+--SELECT * FROM dbo.ProduceGolfBill(1501)
+--END TEST ProduceGOLFBILL
+
+
+--------------------------------------------------------------------------------------------------
+
+
+
+-- START SPROC sp_CreateGolfBill
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE SPECIFIC_NAME = 'sp_CreateGolfBill')
+	DROP PROCEDURE sp_CreateGolfBill 
+GO
+CREATE PROCEDURE sp_CreateGolfBIll
+----variables 
+	@GFolioID	smallint
+AS
+BEGIN 
+	--CUSTOMER 
+			DECLARE @Name varchar(max) 
+			DECLARE @Address varchar(30) 
+			DECLARE @Phone varchar(20) 
+			DECLARE @TeeTimeCheckinDate varchar(20)
+
+	 --BILLING
+			DECLARE @BillingCategoryID varchar(30)
+			DECLARE @BillingDescription varchar(200)
+			DECLARE @BillingItemDate varchar(20)
+			DECLARE @BillingTotal varchar (10)
+
+			
+
+		SELECT DISTINCT @Name = Name , @Address = Address , @Phone = Phone , @TeeTimeCheckinDate = CheckInDate  FROM ProduceGOLFBill(@GFolioID)
+		PRINT ' ' 
+		PRINT @Name + ', ' + @Phone + ', ' + @TeeTimeCheckInDate + ',' +  @Address 
+		PRINT ' '
+
+		DECLARE FolioCursor CURSOR FOR
+		SELECT DISTINCT BillingCategoryID, BillingDescription, BillingItemDate, Total
+		FROM ProduceGolfBill(@GFolioID)
+		ORDER BY BillingItemDate, Total
+		
+		
+
+		OPEN FolioCursor
+		
+		DECLARE @Fetch_FolioCursor int 
+		DECLARE @Fetch_FolioTotal  int
+		DECLARE @OverAllTotal smallmoney
+
+		-- FETCH First Time
+		FETCH NEXT FROM FolioCursor
+		INTO @BillingCategoryID, @BillingDescription , @BillingItemDate , @BillingTotal 
+		SET @Fetch_FolioCursor = @@FETCH_STATUS
+
+		WHILE @Fetch_FolioCursor = 0 
+		BEGIN 
+			PRINT @BillingCategoryID + ' ' + @BillingDescription + ' ' + @BillingItemDate + ' ' + @BillingTotal
+			--
+			FETCH NEXT FROM FolioCursor
+			INTO @BillingCategoryID, @BillingDescription , @BillingItemDate , @BillingTotal 
+			SET @Fetch_FolioCursor = @@FETCH_STATUS
+
+		END
+		
+		
+		SELECT @OverAllTotal = SUM(Total)
+		FROM ProduceGolfBill(@GFolioID)
+		
+
+		PRINT ' ' 
+		PRINT 'Total: ' + CONVERT(varchar(20), @OverAllTotal)
+		PRINT ' ' 
+		CLOSE FolioCursor DEALLOCATE FolioCursor
+		PRINT ''	
+
+
+END
+--END SPROC sp_CreateGolfBIll
+GO
+
+
+----------------------------------------------------------------------------------------------
+
+
+
+--START SPROC sp_applycharges
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE SPECIFIC_NAME = 'sp_applycharges')
+	DROP PROCEDURE sp_applycharges
+
+GO
+CREATE PROCEDURE sp_applycharges
+--variables 
+		 @CheckinDate smalldatetime, 
+		 @GFolioID    smallint
+AS 
+BEGIN 
+		DECLARE @BillingCategoryID smallint 
+		SET @BillingCategoryID = 8 
+
+		DECLARE @BillingDescription varchar(200) 
+		SET @BillingDescription = 'Drop Tee Time Reservation Fee' 
+
+		DECLARE @BillingItemQTY smallint 
+		SET @BillingItemQTY = 1 
+
+		DECLARE @BillingItemDate smalldatetime 
+		SET @BillingItemDate = GETDATE(); 
+
+		DECLARE @GetQuotedRate smallmoney 
+		SET @GetQuotedRate = (SELECT QuotedRate FROM GOLF_FOLIO WHERE GFolioID = @GFolioID)
+
+		IF((14-DATEPART(DAY, @CheckinDate) < 0) AND (7-DATEPART(DAY,@CheckinDate) > 0))
+		BEGIN 
+
+			UPDATE BILLING_DETAILS
+			SET @BillingCategoryID = 8, BillingDescription = @BillingDescription, BillingAmount = 0, BillingItemDate= GETDATE()
+			WHERE GFolioID = @GFolioID 
+
+			INSERT INTO BILLING_DETAILS
+			VALUES(@GFolioID, @BillingCategoryID,@BillingDescription, (@GetQuotedRate * .25),1,@BillingItemDate) 
+
+			UPDATE BILLING_DETAILS
+			SET BillingAmount = 0
+			WHERE GFolioID = @GFolioID AND BillingCategoryID = 1 
+			
+			--UPDATE GOLF_FOLIO 
+			--SET QuotedRate = (@GetQuotedRate * .25)
+			--WHERE GFolioID = @GFolioID
+		END
+		IF(7-DATEPART(DAY,@CheckinDate) < 0 AND (24 - DATEPART(HOUR,@CheckinDate) > 0))
+		BEGIN 
+
+			UPDATE BILLING_DETAILS
+			SET @BillingCategoryID = 8, BillingDescription = @BillingDescription, BillingAmount = 0, BillingItemDate= GETDATE()
+			WHERE GFolioID = @GFolioID 
+
+			INSERT INTO BILLING_DETAILS
+			VALUES(@GFolioID, @BillingCategoryID,@BillingDescription, (@GetQuotedRate * .50),1,@BillingItemDate)
+
+			UPDATE BILLING_DETAILS
+			SET BillingAmount = 1
+			WHERE GFolioID = @GFolioID AND BillingCategoryID = 1 
+
+			--UPDATE GOLF_FOLIO 
+			--SET QuotedRate = (@GetQuotedRate * .50)
+			--WHERE GFolioID = @GFolioID  
+		END
+		IF(24 - DATEPART(HOUR,@CheckinDate) < 0)
+		BEGIN 
+			
+			UPDATE BILLING_DETAILS
+			SET @BillingCategoryID = 8, BillingDescription = @BillingDescription, BillingAmount = 0, BillingItemDate= GETDATE()
+			WHERE GFolioID = @GFolioID 
+
+			INSERT INTO BILLING_DETAILS
+			VALUES(@GFolioID, @BillingCategoryID,@BillingDescription, @GetQuotedRate,1,@BillingItemDate) 
+		
+			
+			
+			UPDATE GOLF_FOLIO 
+			SET QuotedRate = @GetQuotedRate
+			WHERE GFolioID = @GFolioID
+		END
+		--EXEC sp_CreateGolfBill @GFolioID = @GFolioID;
+END 
+--END SPROC sp_applycharges
+GO
+
+---------------------------------------------------------------------------------
+
+
+-- START TRIGGER tr_PlayerNameLookup
+CREATE TRIGGER tr_PlayerNameLookup ON GOLF_PLAYER
+AFTER UPDATE, INSERT 
+AS 
+DECLARE @FirstName varchar(20)
+DECLARE @LastName	varchar(20) 
+DECLARE @PlayerID	smallint
+IF EXISTS (SELECT '' 
+			FROM inserted i 
+			)
+
+BEGIN
+SELECT @FirstName = (SELECT PlayerFirstName FROM inserted)
+SELECT @LastName = (SELECT PlayerLastName FROM inserted)
+SELECT @PlayerID = (SELECT PlayerID FROM inserted)
+EXEC sp_GuestLookup @FirstName, @LastName, @PlayerID
+END
+-- END tr_PlayerNameLookup
+
+GO
+
+
+------------------------------------------------------------------------------------
+
+
+--START TRIGGER tr_GFolioStatusChange 
+
+CREATE TRIGGER tr_GFolioStatusChange ON GOLF_FOLIO
+AFTER INSERT, UPDATE 
+AS
+		IF EXISTS(SELECT '' FROM inserted i WHERE i.Status = 'C' OR i.Status = 'D' )
+
+
+BEGIN 
+		DECLARE @Checkn smalldatetime
+		DECLARE @StatC char(1) 
+		DECLARE @FolioID smallint 
+		SET @FolioID = (SELECT i.GFolioID FROM inserted i )
+		SET @Checkn = (SELECT i.TeeTimeCheckinDate FROM inserted i )
+		IF(SELECT i.Status FROM inserted i) = 'C' 
+		BEGIN 
+			--SET @StatC = (SELECT i.Status FROM inserted i WHERE i.Status = 'C') 
+			EXEC sp_CreateGolfBIll @GFolioID = @FolioID;  
+
+		END 
+		IF(SELECT i.Status FROM inserted i ) = 'D'
+		BEGIN 
+			EXEC sp_applycharges @CheckinDate = @Checkn, @GFolioID = @FolioID
+		END 
+END
+--END TRIGGER tr_GFolioStatusChange
+GO
+
+
+-------------------------------------------------------------------------------------
+
+--START TRIGGER tr_CheckTeeTimeDuration
+CREATE TRIGGER tr_CheckTeeTimeDuration ON TEE_TIME 
+AFTER UPDATE
+AS
+IF EXISTS(SELECT ' ' FROM inserted i
+		  JOIN TEE_TIME_DETAILS ttd
+		  ON i.TeeTimeID = ttd.TeeTimeID
+		  JOIN GOLF_FOLIO gf 
+		  ON ttd.GFolioID = gf.GFolioID
+		  JOIN BILLING_DETAILS bd 
+		  ON gf.GFolioID = bd.GFolioID
+		  WHERE (DATEPART(HOUR, TeeTimeEndTime)) - (DATEPART(HOUR,TeeTimeStartTime)) <= 3)
+BEGIN
+	
+	DECLARE @TeeTimeID smallint 
+	SET @TeeTimeID  = (SELECT i.TeeTimeID FROM inserted i)
+
+
+	DECLARE @FolioID smallint 
+	SET @FolioID = (SELECT DISTINCT bd.GFolioID  FROM inserted i
+					  JOIN TEE_TIME_DETAILS ttd
+						ON i.TeeTimeID = ttd.TeeTimeID
+						JOIN GOLF_FOLIO gf 
+						ON ttd.GFolioID = gf.GFolioID
+						JOIN BILLING_DETAILS bd 
+						ON gf.GFolioID = bd.GFolioID
+						WHERE (DATEPART(HOUR, TeeTimeEndTime)) - (DATEPART(HOUR,TeeTimeStartTime)) <= 3)
+
+	DECLARE @Discount smallint
+	SET @Discount = (SELECT dbo.ApplyDiscount(@TeeTimeID))
+
+	DECLARE @BillingAmount smallmoney 
+	SET @BillingAmount = (SELECT i.TeeTimeAmount FROM inserted i) - @Discount; 
+
+	
+	UPDATE BILLING_DETAILS
+	SET BillingAmount = @BillingAmount
+	WHERE GFolioID = @FolioID AND BillingDescription = 'TeeTime'
+
+END
+--END TRIGGER tr_CheckTeeTimeDuration
+GO
+
+
+----------------------------------------------------------------
+
+
+-- START TEST TRIGGER tr_CheckTeeTimeDuration
+SELECT * FROM BILLING_DETAILS
+
+UPDATE TEE_TIME
+SET TeeTimeEndTime = '2016-08-13 9:00:00'
+WHERE TeeTimeID = 1
+
+SELECT * FROM BILLING_DETAILS
+-- END TEST TRIGGER tr_CheckTeeTimeDuration
+GO 
+
+
+
+----------------------------------------------------------------
+--TEST SPROC sp_CreateGolfBill
+EXEC sp_CreateGolfBIll @GFolioID = 1500; 
+--GO
+EXEC sp_CreateGolfBIll @GFolioID = 1501;
+GO
+EXEC sp_CreateGolfBIll @GFolioID = 1503;
+GO
+EXEC sp_CreateGolfBIll @GFolioID = 1504;
+GO
+EXEC sp_CreateGolfBIll @GFolioID = 1505;
+--END TEST SPROC sp_CreateGolfBill
+-----------------------------------------------------------------
+
+
+
+
+
+-----------------------------------------------------------------
+--BEFORE Execution of the Insert into  GOLF_Player Table
+USE Painter_FARMS
+SELECT * FROM GUEST
+
+USE Painter_GOLF
+SELECT * FROM GOLF_Player
+--BEFORE Execution of the Insert into  GOLF_Player Table
+
+
+-- BELOW EXECUTING TRIGGER tr_PlayerNameLookup AND SPROC sp_GuestLookup
+GO 
+USE Painter_GOLF
+
+INSERT INTO GOLF_PLAYER
+VALUES('Anita', 'Proul',1524,32, '6743 Pk Place','SaltLate', '84601', 'USA', '801-957-4769')
+GO
+
+INSERT INTO GOLF_PLAYER
+VALUES('Ted', 'Cowan',1524,32, '4462 Maybeck Place','Provo', '84241', 'USA', '801-957-4769')
+GO 
+
+
+INSERT INTO GOLF_PLAYER
+VALUES('Riley', 'Painter',1555,15, '3575 S IOWA','Ogden', '84403', 'USA', '801-542-4769')
+GO
+-- ABOVE EXECUTING TRIGGER tr_PlayerNameLookup AND SPROC sp_GuestLookup
+
+
+--AFTER Execution of the Insert into  GOLF_Player Table
+USE Painter_FARMS
+SELECT * FROM GUEST
+
+USE Painter_GOLF
+SELECT * FROM GOLF_Player
+--AFTER Execution of the Insert into  GOLF_Player Table
+
+--------------------------------------------------------------------------------------------
+
+UPDATE GOLF_FOLIO 
+SET Status = 'C', TeeTimeCheckinDate = GETDATE()
+WHERE GFolioID = 1501
+EXEC sp_CreateGolfBill @GFolioID = 1500;
+
+
+UPDATE GOLF_FOLIO 
+SET Status = 'D', TeeTimeCheckinDate = GETDATE()
+WHERE GFolioID = 1501
+EXEC sp_CreateGolfBill @GFolioID = 1501;
+
+--END TEST TRIGGER tr_GFolioStatusChange & SPROC sp_applycharges
+
+
+EXEC sp_dropserver 'TITAN_PAINTER', 'droplogins'

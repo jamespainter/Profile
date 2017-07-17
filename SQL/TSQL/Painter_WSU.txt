@@ -1,0 +1,272 @@
+-- Student Registration Creation Script
+-- James Painter 5/29/2016
+-- Comments
+
+USE Master 
+
+IF EXISTS(SELECT * FROM sysdatabases WHERE name ='Painter_WSU')
+DROP DATABASE Painter_WSU
+
+GO
+
+CREATE DATABASE Painter_WSU
+
+ON PRIMARY 
+
+(
+NAME = 'Painter_WSU', 
+--FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL11.MSSQLSERVER\MSSQL\DATA\Painter_WSU.mdf',
+FILENAME = 'C:\Stage\Painter_WSU.mdf',
+SIZE = 12MB, 
+MAXSIZE = 50MB,
+FILEGROWTH= 10%
+)
+
+LOG ON 
+
+(
+NAME = 'Painter_WSU_Log', 
+FILENAME = 'C:\Stage\Painter_WSU.ldf',
+SIZE = 1200KB, 
+MAXSIZE = 5MB, 
+FILEGROWTH = 500KB
+)
+Go
+
+
+
+--Create Tables
+USE Painter_WSU
+
+CREATE TABLE STUDENT
+(
+StudentID	smallint	NOT NULL	IDENTITY(1,1), 
+StudentFirstName	char(25)	NOT NULL,
+StudentLastName		char(25)	NOT NULL, 
+StudentAddress		char(50)	NULL
+)
+
+CREATE TABLE ACCESSLEVEL
+(
+AccessLevelTier		smallint	 NOT NULL	 IDENTITY(1,1), 
+AccessLevelTitle	varchar(20)	 NULL, 
+AccessLevelDescription	varchar(300) NULL
+)
+
+CREATE TABLE SEMESTER
+(
+SemesterNo	smallint	NOT NULL IDENTITY(1,1), 
+SemesterStartDate	smalldateTime NOT NULL, 
+SemesterEndDate		smalldateTime NOT NULL,
+SemesterSeason		char(9)
+)
+
+CREATE TABLE LECTURER
+(
+LecturerID		smallint	NOT NULL	IDENTITY(1,1), 
+LectFirstName	char(25)	NOT NULL, 
+LectLastName	char(25)	NOT NULL, 
+LectAddress		char(50)
+
+)
+
+CREATE TABLE WSUSER
+(
+UserID		smallint	 NOT NULL	 IDENTITY(1,1), 
+Username	char(15)	 NOT NULL, 
+WSUPassword	char(15)	 NOT NULL, 
+StudentID	smallint	 NULL, 
+LecturerID	smallint	 NULL, 
+AccessLevelTier	smallint	NOT NULL, 
+)
+
+CREATE TABLE LOGHISTORYENTRIES
+(
+LogHistoryID		smallint	NOT NULL IDENTITY(1,1), 
+LogHistoryDate		smalldatetime NOT NULL, 
+UserID		smallint  NOT NULL, 
+WSTIME		smalldatetime	NOT NULL, 
+)
+
+CREATE TABLE COURSE_DETAILS
+(
+LecturerID	smallint	NOT NULL, 
+CourseNo	smallint	NOT NULL, 
+CourseDetailsDate	smalldatetime NOT NULL
+)
+
+CREATE TABLE COURSE
+(
+CourseNo	smallint	NOT NULL	IDENTITY(1,1), 
+CourseDescription	varchar(50)	NULL, 
+Cost		smallmoney	NOT NULL, 
+Prerequisite	smallint NOT NULL, 
+
+)
+
+CREATE TABLE CLASS
+(
+ClassID		smallint	NOT NULL	IDENTITY(1,1), 
+ClassDate	smalldatetime	NOT NULL, 
+Classroom	smallint	NOT NULL, 
+LecturerID	smallint	NOT NULL, 
+SemesterNo smallint	NOT NULL, 
+CourseNo	smallint	NOT NULL, 
+ClassStartTime	smalldatetime	NOT NULL, 
+ClassEndTime	smalldatetime	NOT NULL, 
+)
+
+CREATE TABLE ENROLLMENT
+(
+StudentID	smallint NOT NULL, 
+ClassID		smallint NOT NULL, 
+EnrollDate	smalldatetime NOT NULL, 
+ModifiedDate	smalldatetime NULL
+)
+
+GO
+
+-- Create Primary Keys
+
+ALTER TABLE STUDENT
+	ADD CONSTRAINT PK_SStudentID
+	PRIMARY KEY (StudentID)
+
+ALTER TABLE WSUSER
+	ADD CONSTRAINT PK_UserID
+	PRIMARY KEY (UserID)
+
+ALTER TABLE ACCESSLEVEL
+	ADD CONSTRAINT PK_AccessLevelTier
+	PRIMARY KEY (AccessLevelTier)
+
+ALTER TABLE LOGHISTORYENTRIES
+	ADD CONSTRAINT PK_LogHistoryID
+	PRIMARY KEY (LogHistoryID)
+
+ALTER TABLE LECTURER
+	ADD CONSTRAINT PK_LLecturerID
+	PRIMARY KEY (LecturerID)
+
+ALTER TABLE COURSE_DETAILS
+	ADD CONSTRAINT PK_CDLecturerCourse
+	PRIMARY KEY (LecturerID,CourseNo)
+
+--ALTER TABLE COURSE_DETAILS
+--	ADD CONSTRAINT PK_CDCourseNo
+--	PRIMARY KEY (CourseNo)
+
+ALTER TABLE ENROLLMENT
+	ADD CONSTRAINT PK_EStudentClassID
+	PRIMARY KEY (StudentID, ClassID)
+
+--ALTER TABLE ENROLLMENT
+--	ADD CONSTRAINT PK_EClassID
+--	PRIMARY KEY (ClassID)
+
+ALTER TABLE COURSE
+	ADD CONSTRAINT PK_CCourseNo
+	PRIMARY KEY (CourseNo)
+
+ALTER TABLE CLASS
+	ADD CONSTRAINT PK_CClassID
+	PRIMARY KEY (ClassID)
+
+ALTER TABLE SEMESTER
+	ADD CONSTRAINT PK_SemesterNo
+	PRIMARY KEY (SemesterNo)
+GO
+
+
+
+-- Create Foreign Keys
+ALTER TABLE WSUSER
+ADD
+CONSTRAINT FK_StudentUser
+FOREIGN KEY (StudentID) REFERENCES STUDENT (StudentID)
+ON UPDATE Cascade
+ON DELETE Cascade,
+
+CONSTRAINT FK_LecturerUser
+FOREIGN KEY (LecturerID) REFERENCES LECTURER (LecturerID)
+ON UPDATE Cascade
+ON DELETE Cascade,
+
+CONSTRAINT FK_AccessTierUser
+FOREIGN KEY (AccessLevelTier) REFERENCES ACCESSLEVEL (AccessLevelTier)
+ON UPDATE Cascade
+ON DELETE Cascade
+
+
+ALTER TABLE LOGHISTORYENTRIES
+ADD
+CONSTRAINT FK_LogHistEntUserID
+FOREIGN KEY (UserID) REFERENCES WSUSER (UserID)
+ON UPDATE Cascade
+ON DELETE Cascade
+
+ALTER TABLE COURSE_DETAILS
+ADD
+CONSTRAINT FK_CDLecturerID
+FOREIGN KEY (LecturerID) REFERENCES LECTURER (LecturerID)
+ON UPDATE Cascade
+ON DELETE Cascade,
+
+CONSTRAINT FK_CDCourseNo
+FOREIGN KEY (CourseNo) REFERENCES COURSE (CourseNo)
+ON UPDATE Cascade
+ON DELETE Cascade
+
+ALTER TABLE COURSE
+ADD
+CONSTRAINT FK_CPrerequisite
+FOREIGN KEY (Prerequisite) REFERENCES COURSE (CourseNo)
+ON UPDATE NO ACTION
+ON DELETE NO ACTION
+
+
+ALTER TABLE ENROLLMENT
+ADD
+CONSTRAINT FK_EStudentID
+FOREIGN KEY (StudentID) REFERENCES STUDENT (StudentID)
+ON UPDATE Cascade
+ON DELETE Cascade, 
+
+CONSTRAINT FK_EClassID
+FOREIGN KEY (ClassID) REFERENCES CLASS (ClassID)
+ON UPDATE Cascade
+ON DELETE Cascade
+
+
+ALTER TABLE CLASS
+ADD
+CONSTRAINT FK_CLLecturerID
+FOREIGN KEY (LecturerID) REFERENCES LECTURER (LecturerID)
+ON UPDATE Cascade
+ON DELETE Cascade,
+
+CONSTRAINT FK_CLSemestor
+FOREIGN KEY (SemesterNo) REFERENCES SEMESTER (SemesterNo)
+ON UPDATE Cascade
+ON DELETE Cascade,
+
+CONSTRAINT FK_CLCourseNo
+FOREIGN KEY (CourseNo) REFERENCES COURSE (CourseNo)
+ON UPDATE Cascade
+ON DELETE Cascade
+
+
+-- Check and Balances 
+
+ALTER TABLE STUDENT 
+ADD CONSTRAINT CK_StudentLastName
+CHECK(StudentLastName IN('Painter', 'Stoker', 'Fry'))
+
+
+ALTER TABLE WSUSER 
+ADD CONSTRAINT CK_USERID
+CHECK(UserID IN(4))
+
+ALTER TABLE SEMESTER 
+ADD CONSTRAINT CK_SEMESTERSEASON
+CHECK(SemesterSeason = 'Fall')

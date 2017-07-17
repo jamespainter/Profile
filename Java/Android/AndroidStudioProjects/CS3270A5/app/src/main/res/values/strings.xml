@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">CS3270A5 James Painter</string>
+    <string name="app_title">Practice Making Change</string>
+    <string name="tv_Change_to_make">Change To Make</string>
+    <string name="tv_change_total_so_far">Change Total So Far</string>
+    <string name="tv_time_remaining">Time Remaining</string>
+    <string name="ok">OK</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

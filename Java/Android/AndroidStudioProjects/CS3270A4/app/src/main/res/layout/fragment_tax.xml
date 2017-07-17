@@ -1,0 +1,75 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.weber.jamespainter.cs3270a4.TaxFragment"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <SeekBar
+            android:id="@+id/sb_tax"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.8"
+            android:layout_marginLeft="35dp"
+            android:max="100"
+
+            />
+
+        <TextView
+            android:id="@+id/tv_Tax_Rate_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:paddingLeft="55dp"
+            android:text="Tax Rate"
+
+            />
+
+        <TextView
+            android:id="@+id/tv_Tax_Rate_Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:text="0.00%"/>
+
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+
+    <TextView
+        android:id="@+id/tv_Tax_Amount_Label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+       android:paddingLeft="217dp"
+        android:layout_weight="1"
+        android:text="Tax Amount"/>
+
+    <TextView
+        android:id="@+id/tv_Tax_Amount_Value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="11dp"
+        android:layout_weight=".30"
+        android:text="$0.00"/>
+
+
+    </LinearLayout>
+    <!-- TODO: Update blank fragment layout -->
+
+</LinearLayout>

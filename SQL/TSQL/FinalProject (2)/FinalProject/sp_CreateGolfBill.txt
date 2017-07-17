@@ -1,0 +1,82 @@
+-- START SPROC sp_CreateGolfBill
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE SPECIFIC_NAME = 'sp_CreateGolfBill')
+	DROP PROCEDURE sp_CreateGolfBill 
+GO
+CREATE PROCEDURE sp_CreateGolfBIll
+----variables go here 
+	@GFolioID	smallint
+AS
+BEGIN 
+	--CUSTOMER 
+			DECLARE @Name varchar(max) 
+			DECLARE @Address varchar(30) 
+			DECLARE @Phone varchar(20) 
+			DECLARE @TeeTimeCheckinDate varchar(20)
+
+	 --BILLING
+			DECLARE @BillingCategoryID varchar(30)
+			DECLARE @BillingDescription varchar(200)
+			DECLARE @BillingItemDate varchar(20)
+			DECLARE @BillingTotal varchar (10)
+
+			
+
+		SELECT DISTINCT @Name = Name , @Address = Address , @Phone = Phone , @TeeTimeCheckinDate = CheckInDate  FROM ProduceGOLFBill(@GFolioID)
+		PRINT ' ' 
+		PRINT @Name + ', ' + @Phone + ', ' + @TeeTimeCheckInDate + ',' +  @Address 
+		PRINT ' '
+
+		DECLARE FolioCursor CURSOR FOR
+		SELECT DISTINCT BillingCategoryID, BillingDescription, BillingItemDate, Total
+		FROM ProduceGolfBill(@GFolioID)
+		ORDER BY BillingItemDate, Total
+		
+		
+
+		OPEN FolioCursor
+		
+		DECLARE @Fetch_FolioCursor int 
+		DECLARE @Fetch_FolioTotal  int
+		DECLARE @OverAllTotal smallmoney
+
+		-- FETCH First Time
+		FETCH NEXT FROM FolioCursor
+		INTO @BillingCategoryID, @BillingDescription , @BillingItemDate , @BillingTotal 
+		SET @Fetch_FolioCursor = @@FETCH_STATUS
+
+		WHILE @Fetch_FolioCursor = 0 
+		BEGIN 
+			PRINT @BillingCategoryID + ' ' + @BillingDescription + ' ' + @BillingItemDate + ' ' + @BillingTotal
+			--
+			FETCH NEXT FROM FolioCursor
+			INTO @BillingCategoryID, @BillingDescription , @BillingItemDate , @BillingTotal 
+			SET @Fetch_FolioCursor = @@FETCH_STATUS
+
+		END
+		
+		
+		SELECT @OverAllTotal = SUM(Total)
+		FROM ProduceGolfBill(@GFolioID)
+		
+
+		PRINT ' ' 
+		PRINT 'Total: ' + CONVERT(varchar(20), @OverAllTotal)
+		PRINT ' ' 
+		CLOSE FolioCursor DEALLOCATE FolioCursor
+		PRINT ''	
+
+
+END
+--END SPROC sp_CreateGolfBIll
+
+--TEST sp_CreateGolfBIll
+
+EXEC sp_CreateGolfBIll @GFolioID = 1500; 
+--GO
+EXEC sp_CreateGolfBIll @GFolioID = 1501;
+GO
+EXEC sp_CreateGolfBIll @GFolioID = 1503;
+GO
+EXEC sp_CreateGolfBIll @GFolioID = 1504;
+GO
+EXEC sp_CreateGolfBIll @GFolioID = 1505;

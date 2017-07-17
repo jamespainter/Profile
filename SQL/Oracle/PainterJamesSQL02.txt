@@ -1,0 +1,91 @@
+	James R. Painter 
+
+	CS 2550 
+
+	SQL Assignment 2 
+
+	9/18/2014
+
+1.)
+
+SELECT First_name||' '||Last_Name AS "Full Name", Phone
+From Student 
+WHERE Employer = 'Interchurch'
+Order BY First_name
+;
+
+2.)
+
+SELECT DISTINCT EMPLOYER 
+FROM STUDENT 
+WHERE Employer LIKE '%Corp.%' 
+ORDER BY Employer;
+
+3.)
+
+SELECT UPPER (LAST_NAME)||', '||SUBSTR (FIRST_NAME, 1,1)||'.' AS "Student Name", PHONE 
+FROM STUDENT 
+WHERE Phone LIKE '212%'
+ORDER BY Last_Name;
+
+4.) 
+
+SELECT FIRST_NAME||', '||LAST_NAME AS Student, STREET_ADDRESS, ZIP
+FROM STUDENT 
+WHERE Phone IS Null
+;
+
+5.)
+
+SELECT Zip
+FROM ZIPCODE  
+WHERE CITY LIKE 'Jersey City' AND state LIKE 'NJ'
+ORDER BY Zip
+;
+
+6.)
+
+SELECT Course_NO, Location 
+FROM SECTION 
+Where Location LIKE 'M%'
+;
+
+7.)
+
+SELECT
+CASE 
+  WHEN STATE ='GA' THEN 'Georgia'
+  WHEN STATE = 'FL' THEN 'Florida'
+  WHEN STATE = 'MA' THEN 'Massachusetts'
+END AS "State Name",State, City
+FROM ZIPCODE
+WHERE STATE IN ('GA','FL','MA')
+ORDER BY City ;
+
+8.) 
+
+SELECT Salutation||' '||FIRST_NAME||' '||LAST_NAME||' '||STREET_ADDRESS||' '||Zip AS "Instructor Address"
+From INSTRUCTOR
+WHERE ZIP IN (10025)
+Order By First_Name
+;
+
+9.)
+
+SELECT STUDENT_ID, NUMERIC_GRADE
+FROM GRADE
+WHERE SECTION_ID = 87 AND GRADE_TYPE_CODE = 'FI'
+ORDER BY Numeric_Grade DESC
+;
+
+10.)
+
+SELECT  STUDENT_ID, NUMERIC_GRADE,
+CASE
+  WHEN NUMERIC_GRADE < '85' THEN 'FAIL' 
+  WHEN NUMERIC_GRADE >= '85' THEN 'PASS'
+  END AS RESULT
+FROM GRADE
+WHERE SECTION_ID = 103 and GRADE_TYPE_CODE = 'FI'
+ORDER BY STUDENT_ID
+;  

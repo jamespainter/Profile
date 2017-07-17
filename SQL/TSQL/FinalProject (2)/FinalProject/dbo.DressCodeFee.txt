@@ -1,0 +1,18 @@
+--START FUNCTION dbo.DressCodeFee
+IF EXISTS(SELECT name FROM sys.objects WHERE name = N'dbo.DressCodeFee')
+DROP FUNCTION dbo.DressCodeFee
+GO
+	
+CREATE FUNCTION dbo.DressCodeFee(@TeeTimeID int)
+	RETURNS smallint 
+	AS
+	BEGIN 
+
+		DECLARE @Discount smallint 
+		SET @Discount = 0 
+		SET @Discount = (SELECT TeeTimeAmount FROM TEE_TIME WHERE TeeTimeID = @TeeTimeID)* .20; 
+		RETURN @Discount
+
+	END
+--END Function dbo.DressCodeFee	
+ GO

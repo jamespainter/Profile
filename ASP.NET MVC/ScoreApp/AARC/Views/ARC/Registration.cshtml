@@ -1,0 +1,55 @@
+﻿@model AARC.ViewModels.ArccView
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+</head>
+<body>
+    <div class="container" style="font-size:smaller;">
+               @using (Html.BeginForm())
+               {
+                    @Html.AntiForgeryToken()
+
+                    <h4>Login Registration View</h4>
+
+                    @Html.ValidationSummary(true, " ", new { @class = "txt-danger" })
+
+                <div class="text-center">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p>
+                                @Html.LabelFor(m => m.user.FirstName)
+                                @Html.TextBoxFor(m => m.user.FirstName)
+                            </p>
+                            <p>
+                                @Html.LabelFor(m => m.user.LastName)
+                                @Html.TextBoxFor(m => m.user.LastName)
+                            </p>
+                            <p>
+                                @Html.LabelFor(m => m.user.Email)
+                                @Html.TextBoxFor(m => m.user.Email)
+                            </p>
+                            <p>
+                                @Html.LabelFor(m => m.user.Password)
+                                @Html.TextBoxFor(m => m.user.Password)
+                            </p>
+
+                            <br />
+                            <input type="submit" value="Register" class="btn btn-default" />
+                        </div>
+                    </div>
+               </div>
+              }
+     </div>
+</body>
+</html>

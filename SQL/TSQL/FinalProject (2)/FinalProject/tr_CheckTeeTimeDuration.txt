@@ -1,0 +1,59 @@
+CREATE TRIGGER tr_CheckTeeTimeDuration ON TEE_TIME 
+AFTER UPDATE
+AS
+IF EXISTS(SELECT ' ' FROM inserted i
+		  JOIN TEE_TIME_DETAILS ttd
+		  ON i.TeeTimeID = ttd.TeeTimeID
+		  JOIN GOLF_FOLIO gf 
+		  ON ttd.GFolioID = gf.GFolioID
+		  JOIN BILLING_DETAILS bd 
+		  ON gf.GFolioID = bd.GFolioID
+		  WHERE (DATEPART(HOUR, TeeTimeEndTime)) - (DATEPART(HOUR,TeeTimeStartTime)) <= 3)
+BEGIN
+	
+	DECLARE @TeeTimeID smallint 
+	SET @TeeTimeID  = (SELECT i.TeeTimeID FROM inserted i)
+
+
+	DECLARE @FolioID smallint 
+	SET @FolioID = (SELECT DISTINCT bd.GFolioID  FROM inserted i
+					  JOIN TEE_TIME_DETAILS ttd
+						ON i.TeeTimeID = ttd.TeeTimeID
+						JOIN GOLF_FOLIO gf 
+						ON ttd.GFolioID = gf.GFolioID
+						JOIN BILLING_DETAILS bd 
+						ON gf.GFolioID = bd.GFolioID
+						WHERE (DATEPART(HOUR, TeeTimeEndTime)) - (DATEPART(HOUR,TeeTimeStartTime)) <= 3)
+
+	DECLARE @Discount smallint
+	SET @Discount = (SELECT dbo.ApplyDiscount(@TeeTimeID))
+
+	DECLARE @BillingAmount smallmoney 
+	SET @BillingAmount = (SELECT i.TeeTimeAmount FROM inserted i) - @Discount; 
+
+	
+	UPDATE BILLING_DETAILS
+	SET BillingAmount = @BillingAmount
+	WHERE GFolioID = @FolioID AND BillingDescription = 'TeeTime'
+
+END
+--END TRIGGER tr_CheckTeeTimeDuration
+
+--------------------------------------------------------------------------------------------
+
+--START TEST TRIGGER tr_GFolioStatusChange & SPROC sp_applycharges
+
+UPDATE GOLF_FOLIO 
+SET Status = 'C', TeeTimeCheckinDate = GETDATE()
+WHERE GFolioID = 1501
+EXEC sp_CreateGolfBill @GFolioID = 1500;
+
+
+UPDATE GOLF_FOLIO 
+SET Status = 'D', TeeTimeCheckinDate = GETDATE()
+WHERE GFolioID = 1501
+EXEC sp_CreateGolfBill @GFolioID = 1501;
+
+--END TEST TRIGGER tr_GFolioStatusChange & SPROC sp_applycharges
+
+---------------------------------------------------------------------------------------------

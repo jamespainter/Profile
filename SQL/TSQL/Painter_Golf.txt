@@ -1,0 +1,416 @@
+-- Student Registration Creation Script
+-- James Painter 7/24/2016
+-- Comments
+
+USE Master 
+
+IF EXISTS(SELECT * FROM sysdatabases WHERE name ='Painter_GOLF')
+DROP DATABASE Painter_GOLF
+
+GO
+
+CREATE DATABASE Painter_GOLF
+
+ON PRIMARY 
+
+(
+NAME = 'Painter_FARMS', 
+--FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL11.MSSQLSERVER\MSSQL\DATA\Painter_GOLF.mdf',
+FILENAME = 'C:\Stage\Painter_GOLF.mdf',
+SIZE = 4MB, 
+MAXSIZE = 4MB,
+FILEGROWTH= 500KB
+)
+
+LOG ON 
+
+(
+NAME = 'Painter_GOLF_Log', 
+FILENAME = 'C:\Stage\Painter_GOLF.ldf',
+SIZE = 4MB, 
+MAXSIZE = 4MB, 
+FILEGROWTH = 500KB
+)
+Go
+
+USE Painter_GOLF
+
+GO
+
+CREATE TABLE GOLF_DISCOUNT
+(
+	GDiscountID				smallint NOT NULL  IDENTITY(1,1), 
+	DiscountDescription		varchar(50) NOT NULL, 
+	DiscountExpiration		smalldatetime NOT NULL,
+	DiscountRules			varchar(100) NULL, 
+	DiscountPercent			decimal(4,2) NULL, 
+	DiscountAmount			smallmoney NULL, 
+
+)
+
+
+
+CREATE TABLE GOLF_COURSE
+(
+
+	GCCourseID		smallint  NOT NULL IDENTITY(1,1),
+	GCCourseName	varchar(20) NOT NULL,  
+	GCCourseAddress	smallint NOT NULL, 
+	GCRating		char(1) NOT NULL, 
+	GCCity			varchar(20) NOT NULL, 
+	GCState			char(2)	NULL, 
+	GCCountry		varchar(20) NOT NULL, 
+	GCPostalCode	char(10) NOT NULL, 
+	GCPictureLink	varchar(100) NULL,
+	GDressCode		char(2) NOT NULL 
+
+)
+
+
+CREATE TABLE BILLING_CATEGORY
+(
+	BillingCategoryID		smallint	NOT NULL IDENTITY(1,1) , 
+	BillingCatDescription	varchar(30) NOT NULL, 
+	BillingCatTaxable		bit NOT NULL 
+
+)
+--- TAXRATE Table FROM Painter_FARMS DATBASE
+
+CREATE TABLE TAXRATE
+(
+
+	TaxLocationID		smallint NOT NULL IDENTITY(1,1), 
+	TaxDescription		varchar(30) NOT NULL, 
+	RoomTaxRate			decimal(6,4) NOT NULL, 
+	SalesTaxRate		decimal(6,4) NOT NULL, 
+
+)
+
+--- Hotel Table FROM Painter_FARMS DATBASE
+
+CREATE TABLE HOTEL
+(
+HotelID				smallint NOT NULL, 
+HotelName			varchar(30) NOT NULL, 
+HotelAddress		varchar(30) NOT NULL, 
+HotelCity			varchar(20)	NOT NULL, 
+HotelState			varchar(2)	NULL, 
+HotelCountry		varchar(20) NOT NULL, 
+HotelPostalCode		char(10) NOT NULL, 
+HotelStarRating		char(1) NULL, 
+HotelPictureLink	varchar(100) NULL, 
+TaxLocationID		smallint NOT NULL
+)
+
+
+
+CREATE TABLE CREDITCARD
+(
+CreditCardID		smallint NOT NULL IDENTITY(1,1), 
+GuestID				smallint NOT NULL, 
+CCTYPE				varchar(5) NOT NULL, 
+CCNumber			varchar(16) NOT NULL, 
+CCCompany			varchar(40) NULL, 
+CCCardHolder		varchar(40) NOT NULL, 
+CCExpiration		smalldatetime NOT NULL, 
+HotelID				smallint	NOT NULL
+)
+
+
+CREATE TABLE GOLF_RESERVATION
+(
+
+GReservationID		smallint NOT NULL IDENTITY(5000,1), 
+GReservationDate	smalldateTime NOT NULL, 
+GStatus				char(1) NOT NULL, 
+CreditCardID		smallint NOT NULL, 
+
+)
+
+
+CREATE TABLE GOLF_FOLIO 
+(
+
+	GFolioID			smallint NOT NULL IDENTITY(1,1), 
+	GReservationID		smallint NOT NULL, 
+	TeeTimeID			smallint NOT NULL, 
+	QuotedRate			smallmoney NOT NULL, 
+	TeeTimeCheckinDate	smalldatetime NOT NULL, 
+	Status				char(1)	NOT NULL, 
+	Comments			varchar(200) NULL, 
+	GDiscountID			smallint	NOT NULL, 
+	GolfingDays			smallint	NOT NULL, 
+
+)
+
+CREATE TABLE GOLF_PAYMENT 
+(
+
+	PaymentID		smallint	NOT NULL IDENTITY(8000,1), 
+	GFolioID		smallint	NOT NULL, 
+	PaymentDate		smalldatetime NOT NULL, 
+	PaymentAmount	smallmoney	NOT NULL, 
+	PaymentComments	varchar(200) NULL, 
+
+)
+
+CREATE TABLE BILLING
+(
+	GFolioBillingID		smallint  NOT NULL IDENTITY(1,1), 
+	GFolioID			smallint  NOT NULL, 
+	BillingCategoryID	smallint  NOT NULL, 
+	BillingDescription	varchar(30) NOT NULL, 
+	BillingAmount		smallmoney	NOT NULL, 
+	BillingItemQTY		smallint NOT NULL
+
+)
+
+
+CREATE TABLE TEE_TIME 
+(
+
+	TeeTimeID			smallint NOT NULL IDENTITY(1,1), 
+	TeeTimeDetailID		smallint NOT NULL,
+	GCCourseID			smallint NOT NULL, 
+	TeeTimeTypeID		smallint NOT NULL, 
+	TeeTimeStartTime	smalldatetime NOT NULL, 
+	TeeTimeEndTime		smalldatetime NOT NULL, 
+	TeeTimeDescription	char(3)	NOT NULL
+	
+
+)
+
+
+CREATE TABLE PACKAGE
+(
+	PackageID			smallint NOT NULL IDENTITY(1,1), 
+	GCCourseID			smallint NOT NULL, 
+	PackageAmount		smallmoney NOT NULL, 
+	PackageStartDate	smalldatetime NOT NULL, 
+	PackageEndDate		smalldatetime NOT NULL, 
+	Rounds				smallint	NOT NULL, 
+	PackageDescription	varchar(200) NULL, 
+	People				smallint	NULL, 
+	GolfClubs			smallint	NULL, 
+	CartsRented			smallint	NULL, 
+	Caddy				bit		NULL
+
+)
+
+CREATE TABLE TEE_TIME_DETAILS
+(
+	TeeTimeDetailID		smallint NOT NULL IDENTITY(1,1),  
+	PackageID			smallint NOT NULL, 
+	TeeTimeRate			smallmoney NOT NULL, 
+	TeeTimeDetailDate	smalldatetime NOT NULL, 
+	TeeTimeNumber		smallint NOT NULL
+)
+
+
+
+
+CREATE TABLE CART_DETAILS
+(
+
+	CartDetailID	smallint NOT NULL IDENTITY(1,1), 
+	PackageID		smallint NOT NULL, 
+	CartResDate		smalldatetime NOT NULL, 
+	CartEndDate		smalldatetime	NOT NULL, 
+	CartNumber		smallint		NOT NULL -- Number of Carts
+
+)
+
+
+CREATE TABLE CART
+(
+	CartID			smallint NOT NULL IDENTITY(1,1), 
+	CartDetailID	smallint NOT NULL,
+	CartAmount		smallmoney NOT NULL, 
+	CartCondition	char(1) NOT NULL --(p,f,g,e)
+
+)
+
+
+-- Create Primary Keys
+
+ALTER TABLE GOLF_DISCOUNT
+	ADD CONSTRAINT PK_GDiscountID
+	PRIMARY KEY		(GDiscountID) 
+
+ALTER TABLE	GOLF_COURSE 
+	ADD CONSTRAINT PK_GCCourseID
+	PRIMARY KEY		(GCCourseID)
+
+ALTER TABLE BILLING_CATEGORY
+	ADD CONSTRAINT PK_BillingCategory
+	PRIMARY KEY		(BillingCategoryID)
+
+-- TAXRATE TABLE FROM PAINTER_FARMS DATABASE 
+ALTER TABLE TAXRATE
+	ADD CONSTRAINT PK_TRTaxLocationID
+	PRIMARY KEY (TaxLocationID)
+
+--- Hotel Table FROM Painter_FARMS DATBASE
+ALTER TABLE HOTEL
+	ADD CONSTRAINT PK_HHotelID
+	PRIMARY KEY	(HotelID) 
+
+
+ALTER TABLE CREDITCARD
+	ADD CONSTRAINT PK_CreditCardID
+	PRIMARY KEY	(CreditCardID)
+
+ALTER TABLE GOLF_RESERVATION
+	ADD CONSTRAINT PK_GReservationID
+	PRIMARY KEY (GReservationID)
+
+ALTER TABLE GOLF_FOLIO
+	ADD CONSTRAINT	PK_GFolioID
+	PRIMARY KEY (GFolioID)
+
+ALTER TABLE GOLF_PAYMENT 
+	ADD CONSTRAINT PK_PaymentID
+	PRIMARY KEY (PaymentID) 
+
+ALTER TABLE BILLING 
+	ADD CONSTRAINT PK_GFolioBillingID
+	PRIMARY KEY (GFolioBillingID) 
+
+ALTER TABLE TEE_TIME
+	ADD CONSTRAINT PK_TeeTimeID
+	PRIMARY KEY (TeeTimeID) 
+
+ALTER TABLE PACKAGE 
+	ADD CONSTRAINT PK_PackageID
+	PRIMARY KEY (PackageID) 
+
+ALTER TABLE TEE_TIME_DETAILS
+	ADD CONSTRAINT PK_TeeTimeDetailID
+	PRIMARY KEY (TeeTimeDetailID)
+
+
+ALTER TABLE CART_DETAILS
+	ADD CONSTRAINT PK_CartDetailID
+	PRIMARY KEY (CartDetailID) 
+
+ALTER TABLE CART
+	ADD CONSTRAINT PK_CartID
+	PRIMARY KEY (CartID)
+
+
+
+-- CREATE FOREIGN KEYS 
+
+
+--- Hotel Table FROM Painter_FARMS DATBASE
+ALTER TABLE HOTEL
+ADD
+CONSTRAINT FK_HTaxLocationID
+FOREIGN KEY (TaxLocationID)	REFERENCES TAXRATE (TaxLocationID)
+ON UPDATE Cascade
+ON DELETE Cascade
+
+
+
+ALTER TABLE CREDITCARD
+ADD
+CONSTRAINT FK_HotelID
+FOREIGN KEY (HotelID) REFERENCES HOTEL (HotelID)
+ON UPDATE Cascade
+ON DELETE Cascade
+
+
+
+ALTER TABLE GOLF_RESERVATION
+ADD 
+CONSTRAINT FK_CreditCardID
+FOREIGN KEY (CreditCardID) REFERENCES CREDITCARD (CreditCardID)
+ON UPDATE CASCADE
+ON DELETE CASCADE
+
+ALTER TABLE GOLF_FOLIO
+ADD
+CONSTRAINT FK_GReservationID
+FOREIGN KEY (GReservationID) REFERENCES GOLF_RESERVATION (GReservationID)
+ON UPDATE CASCADE
+ON DELETE CASCADE,
+
+CONSTRAINT FK_TeeTimeID
+FOREIGN KEY (TeeTimeID) REFERENCES TEE_TIME (TeeTimeID)
+ON UPDATE CASCADE
+ON DELETE CASCADE,
+
+CONSTRAINT FK_GDiscountID
+FOREIGN KEY (GDiscountID) REFERENCES GOLF_DISCOUNT (GDiscountID)
+ON UPDATE CASCADE
+ON DELETE CASCADE
+
+
+ALTER TABLE TEE_TIME 
+ADD 
+CONSTRAINT FK_GCCourseID
+FOREIGN KEY (GCCourseID) REFERENCES GOLF_COURSE (GCCourseID)
+ON UPDATE CASCADE
+ON DELETE CASCADE,
+
+CONSTRAINT FK_TeeTimeDetailID
+FOREIGN KEY (TeeTimeDetailID) REFERENCES TEE_TIME_DETAILS (TeeTimeDetailID)
+ON UPDATE CASCADE
+ON DELETE CASCADE
+
+ALTER TABLE TEE_TIME_DETAILS
+ADD
+CONSTRAINT FK_PackageID
+FOREIGN KEY (PackageID) REFERENCES PACKAGE (PackageID)
+ON UPDATE CASCADE
+ON DELETE CASCADE
+
+
+ALTER TABLE PACKAGE 
+ADD 
+CONSTRAINT FK_PGCCourseID
+FOREIGN KEY (GCCourseID) REFERENCES GOLF_COURSE (GCCourseID)
+
+
+ALTER TABLE CART_DETAILS 
+ADD 
+CONSTRAINT FK_CartDetailID
+FOREIGN KEY (PackageID) REFERENCES PACKAGE (PackageID)
+ON UPDATE CASCADE
+ON DELETE CASCADE
+
+ALTER TABLE CART 
+ADD 
+CONSTRAINT FK_CartID 
+FOREIGN KEY (CartDetailID)	REFERENCES CART_DETAILS (CartDetailID)
+ON UPDATE CASCADE
+ON DELETE CASCADE
+
+
+-- Check and Balances 
+
+ALTER TABLE GOLF_RESERVATION
+ADD CONSTRAINT CK_GStatus
+CHECK(GStatus IN ('R','C','L','X')) -- R- Reserved, C - Checked In, L- Late, X - NO SHOW 
+
+ALTER TABLE GOLF_FOLIO
+ADD CONSTRAINT CK_GFStatus
+CHECK(Status IN ('R','C','L','X')) -- R- Reserved, C - Checked In, L- Late, X - NO SHOW 
+
+ALTER TABLE TEE_TIME
+ADD CONSTRAINT CK_TeeTimeDescription
+CHECK(TeeTimeDescription IN ('F9','B9','18')) -- F9 - Front Nine Holes, B9- Back Nine Holes, 18 - 18 holes
+
+
+ALTER TABLE CART 
+ADD CONSTRAINT CK_CartCondition
+CHECK(CartCondition IN ('p','f','g','e')) -- p - poor, f - fair, g - good, e - excellent
+
+ALTER TABLE GOLF_COURSE 
+ADD CONSTRAINT CK_DressCode 
+CHECK (DressCode IN ('C','GA','PA')) -- c - Casual , GA - Golf Attire, PA - Professional Attire  
+
+
+GO 
+
+--BULK INSERT 

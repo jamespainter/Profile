@@ -1,0 +1,116 @@
+James Painter 
+CS 2550 
+SQL Assignment 8
+
+/*1*/
+SELECT DISTINCT s.First_name, s.LAST_NAME 
+FROM STUDENT s, enrollment e 
+WHERE s.student_id = e.STUDENT_ID
+and e.ENROLL_DATE =
+  (SELECT Min(e.ENROLL_DATE)
+  FROM student s, Enrollment e
+  WHERE s.student_id = e.STUDENT_ID) 
+ORDER BY s.LAST_NAME;
+
+/*2*/
+SELECT c.description, s.section_NO, c.cost, s.CAPACITY
+FROM course c, section s 
+WHERE c.COURSE_NO = s.COURSE_NO
+AND COST =
+(SELECT MIN(COST) AS COST 
+    FROM COURSE)
+    AND s.CAPACITY <=
+        (SELECT AVG(capacity)
+        FROM section)
+ORDER BY s.CAPACITY;
+
+/*3*/
+
+ SELECT COURSE_NO, MAX(CAPACITY) AS COURSE_CAPACITY 
+    FROM SECTION 
+    GROUP BY COURSE_NO
+    HAVING SUM(CAPACITY) <
+        (SELECT AVG(Capacity)
+        FROM SECTION)
+ORDER BY COURSE_NO
+;
+
+/*4*/
+SELECT STUDENT_ID, COUNT(*) MOST_CLASSES
+FROM Enrollment
+GROUP BY STUDENT_ID 
+HAVING COUNT (*) =
+(SELECT MAX(ENROLL) 
+FROM 
+    (SELECT Student_ID, COUNT(*) AS ENROLL
+    FROM enrollment
+    GROUP BY STUDENT_ID))
+;
+
+
+
+/*5*/
+
+SELECT s.Student_ID, e.Section_ID 
+FROM student s, enrollment e
+WHERE s.student_ID = e.student_ID
+AND s.zip = 48104
+ORDER BY e.section_ID
+;
+
+/*6*/
+SELECT c.course_no, c.DESCRIPTION
+FROM course c, section s, instructor i 
+WHERE c.COURSE_NO = s.COURSE_NO
+AND s.INSTRUCTOR_ID = i.INSTRUCTOR_ID
+AND i.FIRST_NAME = 'Nina'
+AND i.LAST_NAME = 'Schorin'
+;
+
+
+
+
+
+/*7*/
+  SELECT first_NAME, LAST_NAME
+  FROM STUDENT
+  WHERE STUDENT_ID NOT IN 
+    (SELECT s.student_ID
+    FROM STUDENT s, Enrollment e
+    WHERE s.student_ID = e.STUDENT_ID)
+; 
+
+
+/*8*/
+SELECT DISTINCT st.FIRST_NAME, st.LAST_NAME, c.description, s.section_ID
+FROM student st, enrollment e, section s, COURSE c, GRADE g
+WHERE st.student_ID = e.student_ID 
+AND e.student_id = g.student_ID
+AND e.SECTION_ID = g.SECTION_ID
+AND e.SECTION_ID = s.SECTION_ID
+AND s.COURSE_NO = c.COURSE_NO
+AND g.GRADE_TYPE_CODE = 'PA'
+AND NUMERIC_GRADE =
+    (SELECT MIN(NUMERIC_GRADE) 
+    FROM GRADE g 
+    WHERE g.GRADE_TYPE_CODE = 'PA')
+;
+
+/*9*/ 
+
+SELECT s.SECTION_ID, s.Capacity, COUNT (*)ENROLL
+FROM enrollment e, SECTION s 
+WHERE e.SECTION_ID = s.SECTION_ID
+GROUP BY s.SECTION_ID, s.Capacity
+HAVING COUNT(*) >= s.CAPACITY
+; 
+
+
+/*10*/
+
+SELECT COURSE_NO, DESCRIPTION, COST 
+FROM COURSE 
+WHERE COST =
+(SELECT MIN(COST)
+FROM COURSE) 
+;

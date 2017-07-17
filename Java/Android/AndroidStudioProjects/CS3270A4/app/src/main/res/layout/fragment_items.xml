@@ -1,0 +1,141 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.weber.jamespainter.cs3270a4.ItemsFragment">
+
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <!-- TODO: Update blank fragment layout -->
+
+<LinearLayout
+    android:layout_width="350dp"
+    android:layout_height="50dp"
+
+    android:orientation="horizontal">
+
+    <TextView
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight=".7"
+        android:text="Item Amount"
+        android:textSize="10pt"
+        android:id="@+id/tv_totalAmount1_Label" />
+
+    <EditText
+        android:layout_width="0dp"
+         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:inputType="numberDecimal"
+        android:textAlignment="textEnd"
+        android:text=""
+        android:ems="10"
+        android:id="@+id/et_Item_Amount1_Value"
+        />
+
+</LinearLayout>
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".7"
+            android:text="Item Amount"
+            android:textSize="10pt"
+            android:id="@+id/tv_totalAmount2_Label" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:textAlignment="textEnd"
+            android:text=""
+            android:ems="10"
+            android:id="@+id/et_Item_Amount2_Value"
+            />
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".7"
+            android:text="Item Amount"
+            android:textSize="10pt"
+            android:id="@+id/tv_totalAmount3_Label" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:textAlignment="textEnd"
+            android:text=""
+            android:ems="10"
+            android:id="@+id/et_Item_Amount3_Value"
+            />
+
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".7"
+            android:text="Item Amount"
+            android:textSize="10pt"
+            android:id="@+id/tv_totalAmount4_Label" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:textAlignment="textEnd"
+            android:text=""
+            android:ems="10"
+            android:id="@+id/et_Item_Amount4_Value"
+            />
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
+
+</ScrollView>

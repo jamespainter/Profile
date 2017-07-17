@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Yahtzee</title>
+  <style type="text/css">
+  
+  button{
+  		/*margin-top: 1%;*/
+  		/*float: left;*/
+  }
+  #userLabel{
+  	/*margin-right: 70%;
+  	float:none;*/
+  	color: white; 
+  }
+  #btnplayer{
+  	width: 100px; 
+  	height: 100px; 
+  	margin-left: 0px;
+  	float:none;
+  	/*border: 1px solid black;*/ 
+  }
+  #result{
+  	
+  	margin-top:30px;
+  /*	border: 3px solid black;*/
+  }
+  #result2{
+  	float:left;
+  	margin-left: 5%;
+  }
+  #result3{
+  	float:left;
+  	margin-left: 5%;
+  }
+
+  #table1{
+  	float:left;
+  	/*border: 1px solid white;*/
+  	font-size: 10px;
+  }
+  #table2{
+  	/*border: 1px solid white;*/
+  	font-size: 10px;
+  }
+  #table3{
+  	/*border: 1px solid white;*/
+  	font-size: 10px;
+  }
+  #table4{
+  	float:left;
+  	
+  /*	border: 1px solid white;*/
+  	font-size: 15px;
+  }
+  #table5{
+  	/*border: 1px solid white;*/
+  	font-size: 15px;
+
+  }
+  #table6{
+  	float:left;
+  }
+  #playerGamePoints{
+  	margin-left: 17%;
+
+  }
+  #playerPoints{
+  	margin-left: 25%;
+  	/*margin-top: 20%;*/
+  	padding-top: 180px;
+
+  }
+   #t6TH1{
+  	/*border: 1px solid white;*/
+  	border-top: 1px solid white;
+  	border-bottom: 1px solid white;
+  	font-size: 15px; 
+  }
+  #t7TH1{
+  	/*border: 1px solid white;*/
+  	border-top: 1px solid white;
+  	border-bottom: 1px solid white;
+  	font-size: 15px; 
+  }
+  #playerData{
+  	margin-bottom: 0%;
+  	margin-top:5%;
+  }
+  #t1TH1{
+  	/*border: 1px solid white;*/
+  	border-bottom: 1px solid white;
+  	font-size: 15px; 
+  }
+  #t2TH1{
+  	/*border: 1px solid white;*/
+  	border-bottom: 1px solid white;
+  	font-size: 15px; 
+  }
+  #t3TH1{
+  	/*border: 1px solid white;*/
+  	border-bottom: 1px solid white;
+  	font-size: 15px; 
+  }
+  #t4TH1{
+  	/*border: 1px solid white;*/
+  	border-top: 1px solid white;
+  	border-bottom: 1px solid white;
+  	font-size: 15px; 
+  }
+  #t5TH1{
+  	/*border: 1px solid white;*/
+  	border-top: 1px solid white;
+  	border-bottom: 1px solid white;
+  	font-size: 15px; 
+  }
+  #t1TH2{
+  	padding-left: 10px; 
+  	border-bottom: 1px solid white;
+  	font-size: 15px; 
+  }
+  #t2TH2{
+  	padding-left: 10px; 
+  	border-bottom: 1px solid white;
+  	font-size: 15px; 
+  }
+  #t3TH2{
+  	padding-left: 10px; 
+  	border-bottom: 1px solid white;
+  	font-size: 15px; 
+  }
+
+  #game{
+  	width: 550px; 
+  	height: 500px;
+  	border-width: 20%;
+  	border: 3px solid black; 
+  	background-color: green; 
+  	text-align: center;
+  	color: white;
+  }
+  #container{
+  	float:left;
+  }
+  </style>
+
+  <script>
+	var  totNumOne =0; 
+	var  totNumTwo =0; 
+	var  totNumThree = 0; 
+	var  totNumFour = 0;
+	var  totNumFive = 0; 
+
+	var  tot1NumOne =0; 
+	var  tot1NumTwo =0; 
+	var  tot1NumThree = 0; 
+	var  tot1NumFour = 0;
+	var  tot1NumFive = 0;
+
+	var  tot2NumOne =0; 
+	var  tot2NumTwo =0; 
+	var  tot2NumThree = 0; 
+	var  tot2NumFour = 0;
+	var  tot2NumFive = 0;
+
+	var  tot3NumOne =0; 
+	var  tot3NumTwo =0; 
+	var  tot3NumThree = 0; 
+	var  tot3NumFour = 0;
+	var  tot3NumFive = 0;
+
+	var  tot4NumOne =0; 
+	var  tot4NumTwo =0; 
+	var  tot4NumThree = 0; 
+	var  tot4NumFour = 0;
+	var  tot4NumFive = 0;
+
+	var dice1 = 0;
+	var dice2 = 0;
+	var dice3 = 0;
+	var dice4 = 0;
+	var dice5 = 0;
+
+	var die1Pick = false;
+	var die2Pick = false; 
+	var die3Pick = false; 
+	var die4Pick = false; 
+	var die5Pick = false;  
+
+	var rollcount = 1; 
+	var diceList = new Array();
+	 
+	var rollistCount = 0; 
+
+	//varSwitchUser
+	var switchUser = 0; 
+
+
+	//check for var checkfor3OnesCount 
+	var checkforPlayer1Count = 0; 
+	var checkforPlayer2Count = 0;
+
+	var gameCounter = 0; 
+
+	var player1WinCounter = 0;
+	var player2WinCounter = 0; 
+
+
+function myFunction(message) {
+
+    document.getElementById('message').innerHTML = message.toString();
+}
+function myFunction1(message1) {
+
+    document.getElementById('message1').innerHTML = message1.toString();
+}
+function changePlayer()
+{	
+	gameCounter++;
+	if(gameCounter > 10)
+	{
+		var playerOne = parseInt(document.getElementById('t4col1Row1').innerHTML);
+		var playerTwo = parseInt(document.getElementById('t5col1Row1').innerHTML);
+		if(playerOne > playerTwo)
+		{
+			var zero3 = 0; 
+			player1WinCounter++;
+			alert("Player 1 WINS!!!! Points: " + document.getElementById('t4col1Row1').innerHTML);
+
+			document.getElementById('t6col1Row1').innerHTML = player1WinCounter.toString(); 
+			document.getElementById('t4col1Row1').innerHTML = zero3.toString(); 
+			document.getElementById('t5col1Row1').innerHTML = zero3.toString();
+			gameCounter = 0; 
+		}
+		else if(playerTwo > playerOne)
+		{
+			var zero4 = 0; 
+			alert("Player 2 WINS!!!! Points: " + document.getElementById('t5col1Row1').innerHTML );
+			player2WinCounter++;
+			document.getElementById('t7col1Row1').innerHTML = player2WinCounter.toString();
+			document.getElementById('t4col1Row1').innerHTML = zero4.toString(); 
+			document.getElementById('t5col1Row1').innerHTML = zero4.toString();
+			
+			gameCounter = 0;
+		}
+		else if(playerTwo == playerOne)
+		{
+			var zero5 = 0;
+			alert("Player 1 & Player 2 Tied! Player1: " + document.getElementById('t4col1Row1').innerHTML +" Player2: " + document.getElementById('t5col1Row1').innerHTML);
+			document.getElementById('t4col1Row1').innerHTML = zero5.toString(); 
+			document.getElementById('t5col1Row1').innerHTML = zero5.toString();
+			gameCounter = 0;
+		}
+
+	}
+	else if(switchUser === 0)
+	{
+		document.getElementById('userLabel').innerHTML = "Player 2";
+		alert("Player's 2 Turn")
+		switchUser = 1; 
+	}
+	else
+	{
+		document.getElementById('userLabel').innerHTML = "Player 1";
+		alert("Player's 1 Turn");
+		switchUser = 0; 
+	}
+}
+
+
+
+var rollist = new Array(); 
+function randomPic()
+{
+	
+
+  	
+
+  	if(rollcount > 3)
+  	{
+
+  		applyUpperSectionToPlayer();
+  		//aalert("After applyUpperSectionToPlayer");
+		resetDiePick();
+  		changePlayer();
+
+  		rollist.length = 0; 
+		rollcount = 0; 
+
+  	}
+	else if(rollcount <= 3)
+	{	
+			if(!die1Pick)
+			{
+				
+				dice1 = Math.ceil(Math.random() * (5+1));
+				diceList[0] = dice1; 
+				rollist.push(dice1.toString());
+				
+			}
+			if(!die2Pick)
+			{	
+				dice2 = Math.ceil(Math.random() * (5+1));
+				diceList[1] = dice2;
+				rollist.push(dice2.toString());
+				
+			}
+			if(!die3Pick)
+			{
+				dice3 = Math.ceil(Math.random() * (5+1));
+				diceList[2] = dice3; 
+				rollist.push(dice3.toString());
+
+			}
+			if(!die4Pick)
+			{
+				dice4 = Math.ceil(Math.random() * (5+1));
+				diceList[3] = dice4; 
+				rollist.push(dice4.toString());
+			}
+			if(!die5Pick)
+			{
+				dice5 = Math.ceil(Math.random() * (5+1));
+				diceList[4] = dice5; 
+				rollist.push(dice5.toString());
+			}
+			var zero2 = 0; 
+			document.getElementById('t3col2Row7').innerHTML =  zero2.toString();
+			document.getElementById('diceImage').src='./images/die'+dice1+'.gif';	
+		  	document.getElementById('diceImage2').src='./images/die'+dice2+'.gif';
+		  	document.getElementById('diceImage3').src='./images/die'+dice3+'.gif';	
+		  	document.getElementById('diceImage4').src='./images/die'+dice4+'.gif';
+		  	document.getElementById('diceImage5').src='./images/die'+dice5+'.gif';
+		  	setUpperSection(rollist);	
+	}
+	
+  	rollcount++;
+	// highestScore(dice1,dice2,dice3,dice4,dice5);
+	// myFunction(random);
+	
+	
+  	
+
+}
+
+function applyUpperSectionToPlayer()
+{	
+	if(document.getElementById('userLabel').innerHTML.toString() == "Player 1")
+	{
+			
+			var totalplayer1Points1 = 0;
+	
+	 	// 	totalplayer1Points1 = parseInt(document.getElementById('t2col2Row1').innerHTML);
+	 		
+			// totalplayer1Points1 = (parseInt(document.getElementById('t2col2Row2').innerHTML) * 2) + totalplayer1Points1;
+			
+			// totalplayer1Points1 = (parseInt(document.getElementById('t2col2Row3').innerHTML) * 3) + totalplayer1Points1;
+			
+			// totalplayer1Points1 = (parseInt(document.getElementById('t2col2Row4').innerHTML) * 4) + totalplayer1Points1;
+			
+			// totalplayer1Points1 = (parseInt(document.getElementById('t2col2Row5').innerHTML) * 5) + totalplayer1Points1;
+			
+			// totalplayer1Points1 = (parseInt(document.getElementById('t2col2Row6').innerHTML) * 6) + totalplayer1Points1;
+			
+			totalplayer1Points1 = diceList[0];
+	 		
+			totalplayer1Points1 = diceList[1] + totalplayer1Points1;
+			
+			totalplayer1Points1 = diceList[2] + totalplayer1Points1;
+			
+			totalplayer1Points1 = diceList[3] + totalplayer1Points1;
+			
+			totalplayer1Points1 = diceList[4] + totalplayer1Points1;
+			
+			//totalplayer1Points1 = (parseInt(document.getElementById('t2col2Row6').innerHTML) * 6) + totalplayer1Points1;
+
+			//document.getElementById('t3col2Row7').innerHTML = totalplayer1Points1.toString(); 
+			document.getElementById('t3col2Row7').innerHTML =  totalplayer1Points1.toString();
+			addToPlayer1(totalplayer1Points1); 
+
+	}
+	
+	if(document.getElementById('userLabel').innerHTML.toString() == "Player 2" )
+	{
+
+			var totalPlayer2Points1 = 0; 
+			
+			// totalPlayer2Points1 = parseInt(document.getElementById('t2col2Row1').innerHTML);
+			
+			// totalPlayer2Points1 = (parseInt(document.getElementById('t2col2Row2').innerHTML) * 2) + totalPlayer2Points1;
+			
+			// totalPlayer2Points1 = (parseInt(document.getElementById('t2col2Row3').innerHTML) * 3) + totalPlayer2Points1;
+			
+			// totalPlayer2Points1 = (parseInt(document.getElementById('t2col2Row4').innerHTML) * 4) + totalPlayer2Points1;
+			
+			// totalPlayer2Points1 = (parseInt(document.getElementById('t2col2Row5').innerHTML) * 5) + totalPlayer2Points1;
+			
+			// totalPlayer2Points1 = (parseInt(document.getElementById('t2col2Row6').innerHTML) * 6) + totalPlayer2Points1;
+
+			totalPlayer2Points1 = diceList[0];
+			
+			totalPlayer2Points1 = diceList[1] + totalPlayer2Points1;
+			
+			totalPlayer2Points1 = diceList[2] + totalPlayer2Points1;
+			
+			totalPlayer2Points1 = diceList[3] + totalPlayer2Points1;
+			
+			totalPlayer2Points1 = diceList[4] + totalPlayer2Points1;
+			
+			
+			document.getElementById('t3col2Row7').innerHTML =  totalPlayer2Points1.toString(); 
+			addToPlayer2(totalPlayer2Points1);
+
+
+	}
+}
+
+
+function applyCombination()
+{
+
+	//alert(document.getElementById('userLabel').innerHTML.toString());
+
+	var checkforYahtzee = yahtzee();
+	if(yahtzee())
+	{	
+				if(document.getElementById('userLabel').innerHTML.toString() == "Player 1" && checkforYahtzee == true)
+				{	
+						checkforPlayer1Count++;
+						
+						var totalPointOfDice = 50; 
+						
+						//set 3 of kind colum in table 3
+						document.getElementById('t3col2Row6').innerHTML = totalPointOfDice.toString(); 
+						
+						//pass in point for 3 of a kind
+						var totalplayer1Points = parseInt(document.getElementById('t3col2Row6').innerHTML);
+						addToPlayer1(totalplayer1Points); 
+						
+						//Clear count
+						checkforPlayer1Count = 0; 
+				}
+				if(document.getElementById('userLabel').innerHTML.toString() == "Player 2" && checkforYahtzee == true)
+				{
+						checkforPlayer2Count++;
+						//myFunction("true"); 
+						var totalPointOfDice = 50; 
+						
+						document.getElementById('t3col2Row6').innerHTML = totalPointOfDice.toString(); 
+							
+						var totalplayer2Points = parseInt(document.getElementById('t3col2Row6').innerHTML);
+						addToPlayer2(totalplayer2Points);
+						checkforPlayer2Count = 0;
+					//myFunction("false");
+					//alert("False");
+				}
+
+	}
+	else if(largeStraight())
+	{
+				var checkforLargeStraight = largeStraight();
+				if(document.getElementById('userLabel').innerHTML.toString() == "Player 1" && checkforLargeStraight == true)
+				{	
+						checkforPlayer1Count++;
+						
+						var totalPointOfDice = 40; 
+						
+						//set 3 of kind colum in table 3
+						document.getElementById('t3col2Row5').innerHTML = totalPointOfDice.toString(); 
+						
+						//pass in point for 3 of a kind
+						if(document.getElementById('t3col2Row6').innerHTML == "0")
+						{
+							var totalplayer1Points = parseInt(document.getElementById('t3col2Row5').innerHTML);
+							addToPlayer1(totalplayer1Points); 
+						}
+						
+						//Clear count
+						checkforPlayer1Count = 0; 
+				}
+				if(document.getElementById('userLabel').innerHTML.toString() == "Player 2" && checkforLargeStraight == true)
+				{
+						checkforPlayer2Count++;
+						//myFunction("true"); 
+						var totalPointOfDice = 40; 
+						
+						document.getElementById('t3col2Row5').innerHTML = totalPointOfDice.toString(); 
+						
+						if(document.getElementById('t3col2Row6').innerHTML == "0")
+						{
+							var totalplayer2Points = parseInt(document.getElementById('t3col2Row5').innerHTML);
+							addToPlayer2(totalplayer2Points);
+						}
+						
+						checkforPlayer2Count = 0;
+					//myFunction("false");
+					//alert("False");
+				}
+	}
+	else if(smallStraight())
+	{
+				var checkforSmallStraight = smallStraight();
+				if(document.getElementById('userLabel').innerHTML.toString() == "Player 1" && checkforSmallStraight == true)
+				{	
+						checkforPlayer1Count++;
+						
+						var totalPointOfDice = 30; 
+						
+						//set 3 of kind colum in table 3
+						document.getElementById('t3col2Row4').innerHTML = totalPointOfDice.toString(); 
+						
+						//pass in point for 3 of a kind
+						if(document.getElementById('t3col2Row5').innerHTML == "0")
+						{
+							var totalplayer1Points = parseInt(document.getElementById('t3col2Row4').innerHTML);
+							addToPlayer1(totalplayer1Points); 
+						}
+						
+						//Clear count
+						checkforPlayer1Count = 0; 
+				}
+				if(document.getElementById('userLabel').innerHTML.toString() == "Player 2" && checkforSmallStraight == true)
+				{
+						checkforPlayer2Count++;
+						//myFunction("true"); 
+						var totalPointOfDice = 30; 
+						
+						document.getElementById('t3col2Row4').innerHTML = totalPointOfDice.toString(); 
+						if(document.getElementById('t3col2Row5').innerHTML == "0")
+						{
+							var totalplayer2Points = parseInt(document.getElementById('t3col2Row4').innerHTML);
+							addToPlayer2(totalplayer2Points);
+						}
+						
+						checkforPlayer2Count = 0;
+					//myFunction("false");
+					//alert("False");
+				}
+	}
+	else if(fullHouse())
+	{
+				var checkforFullHouse = fullHouse();
+				if(document.getElementById('userLabel').innerHTML.toString() == "Player 1" && checkforFullHouse == true)
+				{	
+						checkforPlayer1Count++;
+						
+						var totalPointOfDice = 25; 
+						
+						//set 3 of kind colum in table 3
+						document.getElementById('t3col2Row3').innerHTML = totalPointOfDice.toString(); 
+						
+						//pass in point for 3 of a kind
+						if(document.getElementById('t3col2Row4').innerHTML == "0")
+						{
+							var totalplayer1Points = parseInt(document.getElementById('t3col2Row3').innerHTML);
+							addToPlayer1(totalplayer1Points); 
+						}
+						//Clear count
+						checkforPlayer1Count = 0; 
+				}
+				if(document.getElementById('userLabel').innerHTML.toString() == "Player 2" && checkforFullHouse == true)
+				{
+						checkforPlayer2Count++;
+						//myFunction("true"); 
+						var totalPointOfDice = 25; 
+						
+						document.getElementById('t3col2Row3').innerHTML = totalPointOfDice.toString(); 
+						if(document.getElementById('t3col2Row4').innerHTML == "0")
+						{
+							var totalplayer2Points = parseInt(document.getElementById('t3col2Row3').innerHTML);
+							addToPlayer2(totalplayer2Points);
+						}
+						
+						checkforPlayer2Count = 0;
+					//myFunction("false");
+					//alert("False");
+				}
+	}
+	else if(checkFourOfKind())
+	{	
+				var check4OfKind = checkFourOfKind();
+				if(document.getElementById('userLabel').innerHTML.toString() == "Player 1" && check4OfKind == true)
+				{	
+						checkforPlayer1Count++;
+						
+						var totalPointOfDice = 0; 
+						var i; 
+						for(i = 0; i < diceList.length; i++)
+						{
+							totalPointOfDice += diceList[i];
+						}
+						//set 3 of kind colum in table 3
+						document.getElementById('t3col2Row2').innerHTML = totalPointOfDice.toString(); 
+						//pass in point for 3 of a kind
+						if(document.getElementById('t3col2Row3').innerHTML == "0")
+						{
+							var totalplayer1Points = parseInt(document.getElementById('t3col2Row2').innerHTML);
+							addToPlayer1(totalplayer1Points); 
+						}
+						
+						//Clear count
+						checkforPlayer1Count = 0; 
+				} 
+				if(document.getElementById('userLabel').innerHTML.toString() == "Player 2" && check4OfKind == true)
+				{
+						checkforPlayer2Count++;
+						//myFunction("true"); 
+						var totalPointOfDice = 0; 
+						var i; 
+						for(i = 0; i < diceList.length; i++)
+						{
+							totalPointOfDice += diceList[i];
+						}
+						document.getElementById('t3col2Row2').innerHTML = totalPointOfDice.toString(); 
+						
+						if(document.getElementById('t3col2Row3').innerHTML == "0")
+						{
+							var totalplayer2Points = parseInt(document.getElementById('t3col2Row2').innerHTML);
+							addToPlayer2(totalplayer2Points);
+						}
+						
+						checkforPlayer2Count = 0;
+					//myFunction("false");
+					//alert("False");
+				}
+	}
+	else if(checkThreeOfKind())
+	{
+				var checkFor3ofKind = checkThreeOfKind();
+				//myFunction(checkfor3Ones.toString()); 
+				if(document.getElementById('userLabel').innerHTML.toString() == "Player 1" && checkFor3ofKind == true)
+				{	
+						checkforPlayer1Count++;
+						
+						var totalPointOfDice = 0; 
+						var i; 
+						for(i = 0; i < diceList.length; i++)
+						{
+							totalPointOfDice += diceList[i];
+						}
+						//set 3 of kind colum in table 3
+						document.getElementById('t3col2Row1').innerHTML = totalPointOfDice.toString(); 
+						//pass in point for 3 of a kind
+						if(document.getElementById('t3col2Row2').innerHTML == "0")
+						{
+							var totalplayer1Points = parseInt(document.getElementById('t3col2Row1').innerHTML);
+							addToPlayer1(totalplayer1Points); 
+						}
+						
+						//Clear count
+						checkforPlayer1Count = 0; 
+				} 
+				if(document.getElementById('userLabel').innerHTML.toString() == "Player 2" && checkFor3ofKind == true)
+				{
+						checkforPlayer2Count++;
+						//myFunction("true"); 
+						var totalPointOfDice = 0; 
+						var i; 
+						for(i = 0; i < diceList.length; i++)
+						{
+							totalPointOfDice += diceList[i];
+						}
+						document.getElementById('t3col2Row1').innerHTML = totalPointOfDice.toString(); 
+						if(document.getElementById('t3col2Row2').innerHTML == "0")
+						{
+							var totalplayer2Points = parseInt(document.getElementById('t3col2Row1').innerHTML);
+							addToPlayer2(totalplayer2Points);
+						}
+						checkforPlayer2Count = 0;
+					//myFunction("false");
+					//alert("False");
+				}
+	}
+
+
+
+	changePlayer();
+	rollcount = 4;
+
+	
+
+	
+	
+
+
+	
+
+
+	//alert("No Combinations"); 
+
+	if((document.getElementById('userLabel').innerHTML.toString() != "Player 2" && checkfor3Ones == false) || (document.getElementById('userLabel').innerHTML.toString() != "Player 1" && checkfor3Ones == false))
+	{
+		myFunction("false");
+		
+	}
+
+
+	
+}
+
+
+function addToPlayer1(player1Points1)
+{
+	 
+	 var player1TotalPoints = parseInt(document.getElementById('t4col1Row1').innerHTML) + player1Points1;
+	 document.getElementById('t4col1Row1').innerHTML = player1TotalPoints.toString();
+		
+}
+
+function addToPlayer2(player2Points1)
+{
+
+	var player2TotalPoints2 = 0;
+	player2TotalPoints2 = parseInt(document.getElementById('t5col1Row1').innerHTML) + player2Points1;
+	document.getElementById('t5col1Row1').innerHTML = player2TotalPoints2.toString();
+
+
+}
+
+//************************ Start Set Results**********************************************//
+function setDiceResultsZero(){
+
+		var zero = 0; 
+
+		 //Clear Saved Dice
+		document.getElementById('col2Row1').innerHTML = zero.toString();
+		document.getElementById('col2Row2').innerHTML = zero.toString();
+		document.getElementById('col2Row3').innerHTML = zero.toString();
+		document.getElementById('col2Row4').innerHTML = zero.toString();
+		document.getElementById('col2Row5').innerHTML = zero.toString();
+
+
+		 //Clear Upper Section
+		document.getElementById('t2col2Row1').innerHTML = zero.toString(); 
+		document.getElementById('t2col2Row2').innerHTML = zero.toString(); 
+		document.getElementById('t2col2Row3').innerHTML = zero.toString(); 
+		document.getElementById('t2col2Row4').innerHTML = zero.toString(); 
+		document.getElementById('t2col2Row5').innerHTML = zero.toString(); 
+		document.getElementById('t2col2Row6').innerHTML = zero.toString(); 
+
+		//clear table 3
+		document.getElementById('t3col2Row1').innerHTML = zero.toString(); 
+		document.getElementById('t3col2Row2').innerHTML = zero.toString(); 
+		document.getElementById('t3col2Row3').innerHTML = zero.toString(); 
+		document.getElementById('t3col2Row4').innerHTML = zero.toString(); 
+		document.getElementById('t3col2Row5').innerHTML = zero.toString(); 
+		document.getElementById('t3col2Row6').innerHTML = zero.toString(); 
+		//document.getElementById('t3col2Row7').innerHTML = zero.toString(); 
+
+
+
+}
+
+
+function setUpperSection(rollist)
+{
+
+	//myFunction('rollist= ' + rollist[0].toString());
+
+		
+		//var totalCountOne = countOnes(rollist);
+		//myFunction1("rollistCount= " + totalCountOne.toString());
+		if(document.getElementById('userLabel').innerHTML.toString() == "Player 1")
+		{
+				document.getElementById('t2col2Row1').innerHTML = countOnes(rollist).toString(); 
+			    document.getElementById('t2col2Row2').innerHTML = countTwos(rollist).toString(); 
+				document.getElementById('t2col2Row3').innerHTML = countThrees(rollist).toString(); 
+			    document.getElementById('t2col2Row4').innerHTML = countFours(rollist).toString(); 
+				document.getElementById('t2col2Row5').innerHTML = countFives(rollist).toString(); 
+				document.getElementById('t2col2Row6').innerHTML = countSixes(rollist).toString(); 
+
+
+
+
+		}
+		else if(document.getElementById('userLabel').innerHTML.toString() == "Player 2")
+		{
+				document.getElementById('t2col2Row1').innerHTML = countOnes(rollist).toString(); 
+			    document.getElementById('t2col2Row2').innerHTML = countTwos(rollist).toString(); 
+				document.getElementById('t2col2Row3').innerHTML = countThrees(rollist).toString(); 
+			    document.getElementById('t2col2Row4').innerHTML = countFours(rollist).toString(); 
+				document.getElementById('t2col2Row5').innerHTML = countFives(rollist).toString(); 
+				document.getElementById('t2col2Row6').innerHTML = countSixes(rollist).toString(); 
+
+
+
+		}
+		
+
+
+
+} 
+function resetDiePick()
+{
+		die1Pick = false;
+		die2Pick = false; 
+		die3Pick = false; 
+		die4Pick = false; 
+		die5Pick = false; 
+
+		rollistCount = 0;
+		//var zero = 0;
+		//rollistCount = 0;
+		
+
+		setDiceResultsZero(); 
+		 
+		//document.getElementById('t2col2Row1').innerHTML = zero.toString(); 
+		//document.getElementById('t2col2Row2').innerHTML = zero.toString(); 
+		// document.getElementById('t2col2Row3').innerHTML = zero.toString(); 
+		// document.getElementById('t2col2Row4').innerHTML = zero.toString(); 
+		// document.getElementById('t2col2Row5').innerHTML = zero.toString(); 
+		// document.getElementById('t2col2Row6').innerHTML = zero.toString();
+
+		//  for (var i = 0; i < rollist.length; i++) {
+
+		//  		rollist[i] = 0;			
+		//  }
+		// for (var i = 0; i < diceList.length; i++) {
+
+		// 		diceList[i] = 0;			
+		// }
+}
+//************************ End Set Results**********************************************//
+//************************ Start Count for Upper Section **********************************************//
+function countOnes(rollist)
+{
+	
+	var countOne = 0; 
+	var i; 
+	for (i = 0; i < rollist.length; i++) {
+		if( rollist[i].toString() === "1" )
+		{
+			countOne++; 
+		}
+	}
+  	
+	//myFunction("Count One: " + countOne.toString());
+	return countOne; 
+}
+
+function countTwos()
+{
+
+	var countTwo = 0; 
+	var i =0; 
+
+	var i; 
+	for (i = 0; i < rollist.length; i++) {
+		if( rollist[i].toString() === "2" )
+		{
+			countTwo++; 
+		}
+	}
+	return countTwo;
+}
+
+function countThrees()
+{
+
+	var countThree = 0; 
+	
+	var i; 
+	for (i = 0; i < rollist.length; i++) {
+		if( rollist[i].toString() === "3" )
+		{
+			countThree++; 
+		}
+	}
+	return countThree;
+}
+function countFours()
+{
+
+	var countFour = 0; 
+	
+
+	var i; 
+	for (i = 0; i < rollist.length; i++) {
+		if( rollist[i].toString() === "4" )
+		{
+			countFour++; 
+		}
+	}
+	return countFour;
+}
+
+function countFives()
+{
+
+	var countFive = 0; 
+	var i; 
+	for (i = 0; i < rollist.length; i++) {
+		if( rollist[i].toString() === "5" )
+		{
+			countFive++; 
+		}
+	}
+	return countFive; 	
+}
+
+
+function countSixes(rollist)
+{
+
+	var countSix = 0; 
+	var i; 
+	for (i = 0; i < rollist.length; i++) {
+		if( rollist[i].toString() === "6" )
+		{
+			countSix++; 
+		}
+	}
+	return countSix;
+}
+
+//************************ End Count for Upper Section **********************************************//
+//************************ Start Check For Combinations**********************************************//
+
+function checkThreeOfKind()
+{
+		var i; 
+   
+		var arr = [];
+		for(i = 0; i < diceList.length ; i++)
+		{
+		
+				arr.push(diceList[i])
+		
+		}
+		arr.sort(); 
+		arr = arr.join(""); 
+		
+	 	if(/(.)\1{2}/.test(arr))
+	 	{
+	 		//alert("true");
+	 		return true; 
+
+	 	}
+	 	else 
+	 	{
+	 		//alert("false");
+	 		return false; 
+	 	}
+
+
+}
+function checkFourOfKind()
+{
+		var i; 
+   
+		var arr = [];
+		for(i = 0; i < diceList.length ; i++)
+		{
+		
+				arr.push(diceList[i])
+		
+		}
+		arr.sort(); 
+		arr = arr.join(""); 
+		
+	 	if(/(.)\1{3}/.test(arr))
+	 	{
+	 		//alert("true");
+	 		return true; 
+
+	 	}
+	 	else 
+	 	{
+	 		//alert("false");
+	 		return false; 
+	 	}
+
+
+}
+
+
+function fullHouse()
+{
+	
+		var i; 
+   
+		var arr = [];
+		for(i = 0; i < diceList.length ; i++)
+		{
+		
+				arr.push(diceList[i])
+		
+		}
+		arr.sort(); 
+		arr = arr.join(""); 
+		
+	 	if((/(.)\1{2}(.)\2|(.)\3(.)\4{2}/.test(arr)))
+	 	{
+	 		//alert("true");
+	 		return true; 
+
+	 	}
+	 	else 
+	 	{
+	 		//alert("false");
+	 		return false; 
+	 	}
+}
+function smallStraight()
+{
+		var i; 
+   
+		var arr = [];
+		for(i = 0; i < diceList.length ; i++)
+		{
+		
+				arr.push(diceList[i])
+		
+		}
+		arr.sort(); 
+		arr = arr.join(""); 
+		
+	 	if(/1234|2345|3456/.test(arr))
+	 	{
+	 		//alert("true");
+	 		return true; 
+
+	 	}
+	 	else 
+	 	{
+	 		//alert("false");
+	 		return false; 
+	 	}
+
+
+}
+
+function largeStraight()
+{
+	var i; 
+   
+		var arr = [];
+		for(i = 0; i < diceList.length ; i++)
+		{
+		
+				arr.push(diceList[i])
+		
+		}
+		arr.sort(); 
+		arr = arr.join(""); 
+		
+	 	if(/12345|23456/.test(arr))
+	 	{
+	 		//alert("true");
+	 		return true; 
+
+	 	}
+	 	else 
+	 	{
+	 		//alert("false");
+	 		return false; 
+	 	}
+
+
+}
+
+function yahtzee()
+{
+
+	var i; 
+   
+		var arr = [];
+		for(i = 0; i < diceList.length ; i++)
+		{
+		
+				arr.push(diceList[i])
+		
+		}
+		arr.sort(); 
+		arr = arr.join(""); 
+		
+	 	if (/(.)\1{4}/.test(arr))
+	 	{
+	 		//alert("true");
+	 		return true; 
+
+	 	}
+	 	else 
+	 	{
+	 		//alert("false");
+	 		return false; 
+	 	}
+
+
+}
+
+
+
+//************************ End Check For Combinations**********************************************//
+
+function saveDie1()
+{
+	 die1Pick=true; 
+	 document.getElementById('col2Row1').innerHTML = dice1.toString(); 
+
+}
+function saveDie2()
+{
+	 die2Pick=true; 
+	 document.getElementById('col2Row2').innerHTML = dice2.toString(); 
+
+}
+function saveDie3()
+{
+	 die3Pick=true; 
+	 document.getElementById('col2Row3').innerHTML = dice3.toString(); 
+
+}
+function saveDie4()
+{
+	 die4Pick=true; 
+	 document.getElementById('col2Row4').innerHTML = dice4.toString(); 
+
+}
+function saveDie5()
+{
+	 die5Pick=true; 
+	 document.getElementById('col2Row5').innerHTML = dice5.toString(); 
+
+}
+
+</script>
+  
+</head>
+<body onload="setDiceResultsZero()">
+ 
+
+
+
+
+<!-- <input type="button" onclick="myFunction('Hey')" width="50px"> ROLL
+
+<p id='message'> </p> -->
+
+<div id="game">
+			<div id="container">
+					
+						<img src="./images/die1.gif" id='diceImage' onclick="saveDie1()">
+					
+						<img src="./images/die1.gif" id='diceImage2'onclick="saveDie2()">
+					
+						<img src="./images/die1.gif" id='diceImage3'onclick="saveDie3()">
+					
+						<img src="./images/die1.gif" id='diceImage4'onclick="saveDie4()">
+					
+						<img src="./images/die1.gif" id='diceImage5'onclick="saveDie5()">
+					
+			</div>
+			<div id="btnplayer">
+				<label id="userLabel">Player 1</label>
+				<BUTTON  onClick = "randomPic()" id ="Button1">ROLL DICE</BUTTON> 
+				<BUTTON  onClick = "applyCombination()" id ="Button2">APPLY COMBINATION</BUTTON>
+			</div>
+
+		<div id="tables">	
+			<div id="playerData">
+
+					<div id="result"> 
+							<table id="table1">
+							  <tr>
+							    <th id="t1TH1">Clicked & Saved</th>
+							    <th id="t1TH2" align="center">Value</th>
+							  </tr>
+							  <tr align="left">
+							    <td id="col1Row1">Dice 1</td>
+							    <td id="col2Row1" align="center"></td>
+							  </tr>
+							  <tr align="left">
+							    <td id="col1Row2">Dice 2</td>
+							    <td id="col2Row2" align="center"></td>
+							  </tr>
+							  <tr align="left">
+							    <td id="col1Row3">Dice 3</td>
+							    <td id="col2Row3" align="center"></td>
+							  </tr>
+							  <tr align="left">
+							    <td id="col1Row4">Dice 4</td>
+							    <td id="col2Row4" align="center"></td>
+							  </tr>
+							    <tr align="left">
+							    <td id="col1Row5">Dice 5</td>
+							    <td id="col2Row5" align="center"></td>
+							  </tr>
+						</table>
+					</div>
+						<div id="result2">
+							<table id="table2">
+							  <tr>
+							    <th id="t2TH1">Upper Section</th>
+							    <th id="t2TH1" align="center">Total</th>
+							  </tr>
+							  <tr align="left">
+							    <td id="t2col1Row1">Ace(ones)</td>
+							    <td id="t2col2Row1" align="center">0</td>
+							  </tr>
+							  <tr align="left">
+							    <td id="t2col1Row2">Twos</td>
+							    <td id="t2col2Row2" align="center">0</td>
+							  </tr>
+							  <tr align="left">
+							    <td id="t2col1Row3">Threes</td>
+							    <td id="t2col2Row3" align="center">0</td>
+							  </tr>
+							  <tr align="left">
+							    <td id="t2col1Row4">Fours</td>
+							    <td id="t2col2Row4" align="center">0</td>
+							  </tr>
+							    <tr align="left">
+							    <td id="t2col1Row5">Fives</td>
+							    <td id="t2col2Row5" align="center">0</td>
+							  </tr>
+							    <tr align="left">
+							    <td id="t2col1Row6">Sixes</td>
+							    <td id="t2col2Row6" align="center">0</td>
+							  </tr>
+						</table>
+					</div>
+					<div id="result3">
+							<table id="table3">
+							  <tr>
+							    <th id="t3TH1">Lower Section</th>
+							    <th id="t3TH2">Total</th>
+							  </tr>
+							  <tr align="left">
+							    <td id="t3col1Row1">3 of a Kind (Total Dice Points)</td>
+							    <td id="t3col2Row1" align="center"></td>
+							  </tr>
+							  <tr align="left">
+							    <td id="t3col1Row2">4 of a Kind (Total Dice Points)</td>
+							    <td id="t3col2Row2" align="center"></td>
+							  </tr>
+							  <tr align="left">
+							    <td id="t3col1Row3">Full House (25 Points)</td>
+							    <td id="t3col2Row3" align="center"></td>
+							  </tr>
+							  <tr align="left">
+							    <td id="t3col1Row4">Small Straight (30 Points</td>
+							    <td id="t3col2Row4" align="center"></td>
+							  </tr>
+							    <tr align="left">
+							    <td id="t3col1Row5">Large Straight (40 Points)</td>
+							    <td id="t3col2Row5" align="center"></td>
+							  </tr>
+							    <tr align="left">
+							    <td id="t3col1Row6" >YAHTZEE (50 Points)</td>
+							    <td id="t3col2Row6" align="center"></td>
+							  </tr>
+							  <tr align="left">
+							    <td id="t3col1Row7" >Chance(Total Dice Points)</td>
+							    <td id="t3col2Row7" align="center">0</td>
+							  </tr>
+						</table>
+					</div>
+				</div>
+			<div id="playerPoints">
+					<div id="player1Result">
+							<table id="table4">
+							  <tr>
+							    <th id="t4TH1">Player 1 Points</th>
+							    <th></th>
+							  </tr>
+							  <tr align="center">
+							    <td id="t4col1Row1">0</td>
+							    <td id="t4col2Row1"></td>
+							  </tr>
+							 
+						</table>
+					</div>
+					<div id="player2Result">
+							<table id="table5">
+							  <tr>
+							    <th id="t5TH1">Player 2 Points</th>
+							    <th></th>
+							  </tr>
+							  <tr align="center">
+							    <td id="t5col1Row1">0</td>
+							    <td id="t5col2Row2"></td>
+							  </tr>
+							 
+						</table>
+					</div>
+			</div>
+			<div id="playerGamePoints">
+					<div id="player1Result2">
+							<table id="table6">
+							  <tr>
+							    <th id="t6TH1">Player 1 Game Points</th>
+							    <th></th>
+							  </tr>
+							  <tr align="center">
+							    <td id="t6col1Row1">0</td>
+							    <td id="t6col2Row1"></td>
+							  </tr>
+							 
+						</table>
+					</div>
+					<div id="player2Result2">
+							<table id="table7">
+							  <tr>
+							    <th id="t7TH1">Player 2 Game Points</th>
+							    <th></th>
+							  </tr>
+							  <tr align="center">
+							    <td id="t7col1Row1">0</td>
+							    <td id="t7col2Row2"></td>
+							  </tr>
+							 
+						</table>
+					</div>
+			</div>
+	</div>
+</div>
+				
+	 	<p id="message"></p> 
+	 	<p id="message1"></p> 
+		
+	
+</body>
+</html>

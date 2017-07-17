@@ -1,0 +1,19 @@
+﻿<Window x:Class="CS3270A5.GameType"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CS3270A5"
+        mc:Ignorable="d"
+        Title="GameType" Height="300" Width="300">
+    <Grid Background="#FF1E46B0">
+        <Label x:Name="lbl_Question" Content="Question:" HorizontalAlignment="Left" Height="182" Margin="35,51,0,0" VerticalAlignment="Top" Width="226" Foreground="#FFF9F6F6"/>
+        <RadioButton x:Name="rb_add" Content="Add" HorizontalAlignment="Left" Height="38" Margin="107,90,0,0" VerticalAlignment="Top" Width="105" IsChecked="True" GroupName="gameMode" Foreground="#FFF9F6F6"/>
+        <RadioButton x:Name="rb_subtraction" Content="Subtraction" HorizontalAlignment="Left" Height="38" Margin="107,108,0,0" VerticalAlignment="Top" Width="105" GroupName="gameMode" Foreground="#FFF9F6F6"/>
+        <RadioButton x:Name="rb_multiply" Content="Multiply" HorizontalAlignment="Left" Height="38" Margin="107,126,0,0" VerticalAlignment="Top" Width="105" GroupName="gameMode" Foreground="#FFF9F6F6"/>
+        <RadioButton x:Name="rb_divide" Content="Divide" HorizontalAlignment="Left" Height="38" Margin="107,144,0,0" VerticalAlignment="Top" Width="105" GroupName="gameMode" Foreground="#FFF9F6F6"/>
+        <Button x:Name="btn_ok" Content="Ok" HorizontalAlignment="Left" Margin="51,200,0,0" VerticalAlignment="Top" Width="79" Height="29" Click="btn_ok_Click" Background="#FFDB8E6C" BorderBrush="#FFF26E4D" BorderThickness="3" Foreground="#FF1E46B0" FontSize="16" FontFamily="Snap ITC"/>
+        <Button x:Name="btn_cancel" Content="Cancel" HorizontalAlignment="Left" Height="26" Margin="156,200,0,0" VerticalAlignment="Top" Width="77" Click="btn_cancel_Click" Background="#FFDB8E6C" BorderBrush="#FFF26E4D" BorderThickness="3" Foreground="#FF1E46B0" FontSize="16" FontFamily="Snap ITC"/>
+
+    </Grid>
+</Window>

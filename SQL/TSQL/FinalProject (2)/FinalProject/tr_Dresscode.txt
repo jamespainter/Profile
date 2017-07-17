@@ -1,0 +1,61 @@
+--------------------------------------------------------------------------------
+
+--START TRIGGER tr_DressCode 
+CREATE TRIGGER tr_Dresscode ON TEE_TIME
+AFTER UPDATE, INSERT
+AS
+		IF EXISTS(SELECT '' FROM inserted i
+				  JOIN TEE_TIME_DETAILS ttd
+				  ON i.TeeTimeID = ttd.TeeTimeID
+				  JOIN GOLF_FOLIO gf 
+				  ON ttd.GFolioID = gf.GFolioID
+				  JOIN BILLING_DETAILS bd 
+				  ON gf.GFolioID = bd.GFolioID) 
+ 
+BEGIN 
+		DECLARE @DressCodeFee smallint 
+		--SET @DressCodeFee =
+
+		DECLARE @DressCodeAttire char(2)
+		SET @DressCodeAttire = (SELECT i.AppropriateDressCode FROM inserted i)
+
+		DECLARE @TeeTimeID smallint 
+		SET @TeeTimeID = (SELECT i.TeeTimeID FROM inserted i)
+
+
+		IF(@DressCodeAttire = 'N')
+		BEGIN 
+			SET @DressCodeFee = (SELECT dbo.DressCodeFee(@TeeTimeID))
+
+			DECLARE @Discount smallint
+			SET @Discount = (SELECT dbo.ApplyDiscount(@TeeTimeID))
+
+			DECLARE @BillingAmount smallmoney 
+			SET @BillingAmount = (SELECT i.TeeTimeAmount FROM inserted i) + @Discount; 
+
+			DECLARE @FolioID smallint 
+			SET @FolioID = (SELECT DISTINCT bd.GFolioID  FROM inserted i
+							JOIN TEE_TIME_DETAILS ttd
+							ON i.TeeTimeID = ttd.TeeTimeID
+							JOIN GOLF_FOLIO gf 
+							ON ttd.GFolioID = gf.GFolioID
+							JOIN BILLING_DETAILS bd 
+							ON gf.GFolioID = bd.GFolioID)
+	
+			INSERT INTO BILLING_DETAILS
+			VALUES(@FolioID, 9 ,'DressCodeFee', @BillingAmount, 1, GetDate())
+			
+		END
+END		
+--END TRIGGER tr_DressCode 
+GO
+-----------------------------------------------------------------------------------------------
+
+--START TEST FOR tr_DressCode & UDF dbo.ApplyDresscodeFee
+UPDATE TEE_TIME 
+SET AppropriateDressCode ='N'
+WHERE TeeTimeID = 1
+
+SELECT * FROM TEE_TIME 
+SELECT * FROM BILLING_DETAILS
+--END TEST FOR tr_DressCode & UDF dbo.ApplyDresscodeFee

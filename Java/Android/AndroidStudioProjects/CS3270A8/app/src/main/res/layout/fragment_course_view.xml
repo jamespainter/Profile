@@ -1,0 +1,183 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.weber.jamespainter.cs3270a8.CourseViewFragment"
+    android:orientation="vertical">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="5dp">
+
+        <TextView
+            android:id="@+id/tv_cv_edit_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:layout_weight="1"
+            android:paddingRight="10dp"
+            android:text="ID:"
+            android:textSize="15dp"
+            android:textColor="@android:color/darker_gray"/>
+
+
+        <EditText
+            android:id="@+id/et_cv_edit_id"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="2"
+            android:background="@android:drawable/editbox_dropdown_light_frame"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:text="TEXT"
+            android:textColor="@android:color/darker_gray"
+            android:focusable="false"
+            />
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="5dp">
+
+        <TextView
+            android:id="@+id/tv_cv_edit_course_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:layout_weight="1"
+            android:paddingRight="10dp"
+            android:text="Name:"
+            android:textSize="15dp"
+            android:textColor="@android:color/darker_gray"/>
+
+
+        <EditText
+            android:id="@+id/et_cv_edit_course_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:background="@android:drawable/editbox_dropdown_light_frame"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:text="TEXT"
+            android:textColor="@android:color/darker_gray"
+            android:focusable="false"
+            />
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="5dp">
+
+        <TextView
+            android:id="@+id/tv_cv_edit_course_code"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:layout_weight="1"
+            android:paddingRight="10dp"
+            android:text="Course Code:"
+            android:textSize="15dp"
+            android:textColor="@android:color/darker_gray"/>
+
+
+        <EditText
+            android:id="@+id/et_cv_edit_course_code"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:background="@android:drawable/editbox_dropdown_light_frame"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:text="TEXT"
+            android:textColor="@android:color/darker_gray"
+            android:focusable="false"
+            />
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="5dp">
+
+        <TextView
+            android:id="@+id/tv_cv_edit_start_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:layout_weight="1"
+            android:paddingRight="10dp"
+            android:text="Start At:"
+            android:textSize="15dp"
+            android:textColor="@android:color/darker_gray"/>
+
+
+        <EditText
+            android:id="@+id/et_cv_edit_start_date"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="2"
+            android:background="@android:drawable/editbox_dropdown_light_frame"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:text="TEXT"
+            android:textColor="@android:color/darker_gray"
+            android:focusable="false"
+            />
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="5dp">
+
+        <TextView
+            android:id="@+id/tv_cv_edit_end_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:layout_weight="1"
+            android:paddingRight="10dp"
+            android:text="End At:"
+            android:textSize="15dp"
+            android:textColor="@android:color/darker_gray"/>
+
+
+        <EditText
+            android:id="@+id/et_cv_edit_end_date"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="2"
+            android:background="@android:drawable/editbox_dropdown_light_frame"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:text="TEXT"
+            android:textColor="@android:color/darker_gray"
+            android:focusable="false"
+            />
+
+
+
+    </LinearLayout>
+</LinearLayout>

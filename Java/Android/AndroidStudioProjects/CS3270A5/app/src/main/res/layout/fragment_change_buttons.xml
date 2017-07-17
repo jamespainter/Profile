@@ -1,0 +1,80 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.weber.jamespainter.cs3270a5.ChangeButtons"
+
+    >
+    <TableRow>
+
+    <Button
+        android:id="@+id/btn_50"
+        android:text="$50"
+        android:layout_width="77dp"
+        android:layout_height="wrap_content"
+        />
+    <Button
+        android:id="@+id/btn_20"
+        android:text="$20"
+        android:layout_width="77dp"
+        android:layout_height="wrap_content"
+        />
+    <Button
+        android:id="@+id/btn_10"
+        android:text="$10"
+        android:layout_width="77dp"
+        android:layout_height="wrap_content"
+        />
+    <Button
+        android:id="@+id/btn_5"
+        android:text="$5"
+        android:layout_width="77dp"
+        android:layout_height="wrap_content"
+        />
+    <Button
+        android:id="@+id/btn_1"
+        android:text="$1"
+        android:layout_width="77dp"
+        android:layout_height="wrap_content"
+        />
+
+
+</TableRow>
+    <TableRow>
+
+        <Button
+            android:id="@+id/btn_050"
+            android:text="$.50"
+            android:layout_width="77dp"
+            android:layout_height="wrap_content"
+            />
+        <Button
+            android:id="@+id/btn_020"
+            android:text="$.20"
+            android:layout_width="77dp"
+            android:layout_height="wrap_content"
+            />
+        <Button
+            android:id="@+id/btn_010"
+            android:text="$.10"
+            android:layout_width="77dp"
+            android:layout_height="wrap_content"
+            />
+        <Button
+            android:id="@+id/btn_05"
+            android:text="$.05"
+            android:layout_width="77dp"
+            android:layout_height="wrap_content"
+            />
+        <Button
+            android:id="@+id/btn_01"
+            android:text=".01"
+            android:layout_width="77dp"
+            android:layout_height="wrap_content"
+            />
+
+
+    </TableRow>
+    <!-- TODO: Update blank fragment layout -->
+
+</TableLayout>

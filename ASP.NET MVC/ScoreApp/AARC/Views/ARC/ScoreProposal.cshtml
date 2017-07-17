@@ -1,0 +1,315 @@
+﻿@model AARC.ViewModels.ArccView
+@{
+    Layout = null;
+
+
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    <style>
+        body{
+            background-color: aliceblue;
+
+        } 
+        .table1{
+            border: 3px solid lightgrey;
+           
+        }
+        .table2{
+
+            background-color: white;
+            color:Black; 
+            font-size: small; 
+            border: 3px solid lightgrey; 
+
+        }
+        .PN{
+            /*padding-left: 5%;*/ 
+            text-align:center; 
+            font-size: medium;
+            border-bottom: 3px solid lightgrey;
+            /*border-right: 3px solid lightgrey;*/
+        }
+        .H2{
+            padding-left:1%; 
+            text-align:center; 
+            font-size: medium; 
+        }
+        .RubricHeader{
+            text-align:center; 
+            font-size: medium;
+        }
+        .header{
+
+            background-color: black; 
+            color: white; 
+            margin:inherit; 
+
+        }
+        .col-md-8{
+            margin-left: 15%; 
+        }
+      .user{
+          background-color: black; 
+          color: white; 
+          font-size:15px;
+          
+        }
+      .user1{
+
+          color:white; 
+          
+      }
+    </style>
+    <script type="text/javascript">
+
+        function changeRed() {
+            if (document.getElementsByClassName('redclass').innerHTML == 0)
+            {
+                document.getElementsByClassName('redclass').style.color = "red"
+            }
+        }
+
+        function changeNormal()
+        {
+            if (document.getElementsByClassName('redclass').innerHTML != 0) {
+                document.getElementsByClassName('redclass').style.color = "black"
+            }
+            else
+            {
+                document.getElementsByClassName('redclass').style.color = "red"
+            }
+
+        }
+        
+
+
+
+    </script>
+</head>
+<body>
+    <div class="container" style="font-size:smaller;">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="header">
+            <h1>ARCC Committee Score</h1>
+            <div class="user">
+                @Model.userEmail
+            </div>
+        </div>
+            @Html.ValidationSummary(true, " ", new { @class = "txt-danger" })
+       
+    
+            <div class="col-md-8">
+                <h3>Score Proposal</h3>
+                <table cellpadding="5" class="table1">
+                    <thead>
+                        <tr>
+                            <th class="PN">Proposal Name</th>
+                            <th class="PN">Educational Experience</th>
+                            <th class="PN">Innovation</th>
+                            <th class="PN">Dissemination</th>
+                            <th class="PN">Evaluation</th>
+                            <th class="PN">Support</th>
+                        </tr>
+                    </thead>
+                    @for (int i = 0; i < Model.scores.Count; i++)
+                {
+                        <tr>
+                            <td>
+
+                                @Html.TextBoxFor(m => m.scores[i].Proposal_Name)
+
+                            </td>
+                            <td align="center">
+                                @*@Html.DropDownListFor(m => m.scores.Education_Exp, new SelectList(Model.Educational_Exp))*@
+                                
+                                    @Html.EditorFor(m => m.scores[i].Education_Exp, new { htmlAttributes = new { @type = "number", @min = "0", @max = "35", @step = "1", @value = "0", @id = "redclass" } })
+                                
+                                    @*@Html.ValidationMessageFor(m => m.scores[i].Education_Exp, "*Address is required", new { @class = "redclass" })*@
+                     </td>
+                                    <td align="center">
+                                        @*@Html.DropDownListFor(m => m.scores.Innovation, new SelectList(Model.Innovation))*@
+                                        @*@Html.EditorFor(m => m.Innovation[i] , new { htmlAttributes = new { @type = "number", @min = "0", @max = "35", @step = "1", @value = "0" } })*@
+                                        @Html.EditorFor(m => m.scores[i].Innovation, new { htmlAttributes = new { @type = "number", @min = "0", @max = "35", @step = "1", @value = "0" } })
+                                    </td>
+                                    <td align="center">
+                                        @*@Html.DropDownListFor(m => m.scores.Dissemination, new SelectList(Model.Dissemination))*@
+                                        @*@Html.EditorFor(m => m.Dissemination[i] , new { htmlAttributes = new { @type = "number", @min = "0", @max = "10", @step = "1", @value = "0" } })*@
+                                        @Html.EditorFor(m => m.scores[i].Dissemination, new { htmlAttributes = new { @type = "number", @min = "0", @max = "10", @step = "1", @value = "0" } })
+                                    </td>
+                                    <td align="center">
+                                        @*@Html.DropDownListFor(m => m.scores.Evaluation, new SelectList(Model.Evaluation))*@
+                                        @*@Html.EditorFor(m => m.Evaluation[i] , new { htmlAttributes = new { @type = "number", @min = "0", @max = "10", @step = "1", @value = "0" } })*@
+                                        @Html.EditorFor(m => m.scores[i].Evaluation, new { htmlAttributes = new { @type = "number", @min = "0", @max = "10", @step = "1", @value = "0" } })
+                                    </td>
+                                    <td align="center">
+                                        @*@Html.DropDownListFor(m => m.scores.Support, new SelectList(Model.Support))*@
+                                        @*@Html.EditorFor(m => m.Support[i], new { htmlAttributes = new { @type = "number", @min = "0", @max = "10", @step = "1", @value = "0" } })*@
+                                        @Html.EditorFor(m => m.scores[i].Support, new { htmlAttributes = new { @type = "number", @min = "0", @max = "10", @step = "1", @value = "0" } })
+                                    </td>
+                </tr>
+                                    }
+                    </table>
+                    <input type="submit" value="Submit Score" class="btn btn-default" />
+                </div>
+                                    }
+        <div class="col-md-8">
+            <h3>Ruberic</h3>
+            <table border="1" cellpadding="6" class="table2">
+                <thead>
+                    <tr>
+                        <th class="RubricHeader">Criteria</th>
+                        <th class="RubricHeader">Description</th>
+                        <th class="RubricHeader">Ratings’ Suggestions</th>
+                        <th class="RubricHeader">Score</th>
+                        
+                    </tr>
+                </thead>
+                <tr>
+                    <td width="120px">
+                      <p>Educational Experience</p>
+                    </td>
+                    <td align="left" width="235px">
+                        <p>How does the proposed project enhance the experience at Weber State University?
+                         How many students are impacted? Are multiple departments or programs involved ?</p>
+                    </td>
+                    <td align="left" width="250px">
+                       <p>35 - Impacts a large number of students or several programs <br /><br/>
+                        20 - Impacts many students in one program <br /><br />5 - Impacts a small number of 
+                        students</p>
+                    </td>
+                    <td align="center" width="115px">
+                        <p>0-35</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="120px">
+                        <p>Innovation</p>
+                    </td>
+                    <td align="left" width="235px">
+                        <p>
+                            How does the proposed project
+                            help position Weber State
+                            University as a leader in the
+                            innovative use of technology for
+                            education?
+                        </p>
+                    </td>
+                    <td align="left" width="250px">
+                        <p>
+                            35- Project uses new technology
+                            in novel ways
+                            <br /><br />
+                            20 - Project uses new technology
+                            with demonstrated methods
+                            <br /><br />
+                            5 - Project uses existing
+                            technology for standard uses
+
+                        </p>
+                    </td>
+                    <td align="center" width="115px">
+                        <p>0-35</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="120px">
+                        <p>Dissemination</p>
+                    </td>
+                    <td align="left" width="235px">
+                        <p>
+                            How will the work be disseminated to other areas on campus or to other institutions?  Are there publishable results or
+                            documentation?
+
+                        </p>
+                    </td>
+                    <td align="left" width="250px">
+                        <p>
+                            10 -  The project has the potential to be widely disseminated beyond the University 
+                            <br /><br />
+                            5 - The project success will be
+                            documented and shared within the University (e.g. Teaching and Learning Forum)
+                            <br /><br />
+                            0 - The project will have no
+                            publishable or sharable results
+
+
+                        </p>
+                    </td>
+                    <td align="center" width="115px">
+                        <p>0-10</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="120px">
+                        <p>Evaluation</p>
+                    </td>
+                    <td align="left" width="235px">
+                        <p>
+                            How will the proposed project’s
+                            success be evaluated?
+                        </p>
+                    </td>
+                    <td align="left" width="250px">
+                        <p>
+                            10 - The proposal presents a strong qualitative and / or quantitative evaluation plan.
+                            <br /><br />
+                            5 - The proposal presents an evaluation plan
+                            <br /><br />
+                            0 - The proposal lacks a defined evaluation plan 
+
+                        </p>
+                    </td>
+                    <td align="center" width="115px">
+                        <p>0-10</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="120px">
+                        <p>Support</p>
+                    </td>
+                    <td align="left" width="235px">
+                        <p>
+                            Is there broad support for the
+                            project (through matching funds
+                            or collaborations)? Note:
+                            projects over $5000 require
+                            matching funds for the amount over the $5000..
+
+                        </p>
+                    </td>
+                    <td align="left" width="250px">
+                        <p>
+                            10 - The project has
+                            demonstrated support (through significant matching funds and / or letters of collaboration with other areas on campus or in the
+                            community).
+                            <br /><br />
+                            5 - The project has general
+                            support from the college or department.
+                            <br /><br />
+                            0 - The is no documentation of
+                            additional support for the project.
+                        </p>
+                    </td>
+                    <td align="center" width="115px">
+                        <p>0-10</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+</body>
+</html>

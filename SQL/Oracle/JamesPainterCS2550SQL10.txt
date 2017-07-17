@@ -1,0 +1,176 @@
+James Painter 
+CS2550
+SQL Assignment 10
+
+/*1*/
+INSERT INTO Instructor
+(Instructor_ID, Salutation, First_NAME, LAST_NAME, STREET_ADDRESS, ZIP, phone, CREATED_BY, CREATED_DATE, MODIFIED_BY, MODIFIED_DATE )
+VALUES 
+(815,'Mr','Hugo','Reyes','2342 Oceanic Way', '07002', null, 'CS2550JAMESPAINTER', SYSDATE , 'CS2550JAMESPAINTER', SYSDATE )
+;
+
+
+/*2*/
+
+INSERT INTO SECTION 
+(SECTION_ID, COURSE_NO, SECTION_NO, START_DATE_TIME, LOCATION, INSTRUCTOR_ID, CAPACITY, CREATED_BY, CREATED_DATE, MODIFIED_BY, MODIFIED_DATE )
+VALUES 
+(48,142,4, TO_DATE('22-SEP-2011 8:15AM','DD-MON-YYYY HH:MiAM'), 'L211', 815, 15, 'CS2550JAMESPAINTER', SYSDATE,'CS2550JAMESPAINTER', SYSDATE)
+;
+
+/*3*/
+
+INSERT INTO ENROLLMENT 
+SELECT STUDENT_ID, 48, SYSDATE, NULL, 'CS2550JAMESPAINTER', SYSDATE, 'CS2550JAMESPAINTER', SYSDATE
+FROM STUDENT 
+WHERE STUDENT_ID IN (137, 266, 375,382)
+;
+
+/*4*/
+DELETE FROM GRADE 
+WHERE STUDENT_ID = 147 
+AND SECTION_ID =120
+;
+DELETE FROM ENROLLMENT 
+WHERE STUDENT_ID = 147 
+AND SECTION_ID =120
+;
+
+/*5*/
+DELETE FROM GRADE 
+WHERE STUDENT_ID = 180 
+AND SECTION_ID =119
+;
+DELETE FROM ENROLLMENT 
+WHERE STUDENT_ID = 180 
+AND SECTION_ID =119
+;
+
+/*6*/
+Update INSTRUCTOR
+SET PHONE = 4815162342
+WHERE INSTRUCTOR_ID = 815
+;
+
+/*7*/
+UPDATE GRADE 
+SET NUMERIC_GRADE = 100
+WHERE SECTION_ID = 119
+AND GRADE_TYPE_CODE = 'HM'
+AND GRADE_CODE_OCCURRENCE = 1
+;
+
+/*8*/
+UPDATE GRADE 
+SET NUMERIC_GRADE = NUMERIC_GRADE * 1.1 
+WHERE SECTION_ID = 119
+AND GRADE_TYPE_CODE = 'FI'
+;
+
+/*9*/
+SELECT t1.section_id, t1.location, NVL(enrolled, 0) as Enrolled
+FROM 
+(SELECT s.section_id, c.course_no, location
+FROM course c, section s
+Where c.course_no = s.course_no
+AND description LIKE ('%Project Management%')) t1
+LEFT JOIN
+(SELECT s.section_id, count(*) as enrolled
+FROM enrollment e, section s, course c
+Where c.course_no = s.course_no
+and e.section_id = s.section_id
+AND description LIKE ('%Project Management%')
+GROUP BY s.section_id) t2
+ON t1.section_id = t2.section_id
+order by section_id;
+
+
+/*10*/
+SELECT i.first_name, i.last_name, i.phone
+FROM instructor i, section s, course c 
+WHERE i.INSTRUCTOR_ID = s.INSTRUCTOR_ID
+AND s.COURSE_NO = c.COURSE_NO
+AND c.description like '%Project Management%'
+ORDER BY i.LAST_NAME
+;
+
+/*11*/
+SELECT S.STUDENT_ID, S.FIRST_NAME, S.LAST_NAME, TO_CHAR(avg(g.numeric_grade), '99.99') AVERAGE
+FROM STUDENT S, Enrollment e, grade g
+WHERE s.student_id = e.STUDENT_ID
+AND e.STUDENT_ID = g.STUDENT_ID
+AND e.SECTION_ID = g.SECTION_ID
+and e.SECTION_ID =119
+GROUP BY S.STUDENT_ID, S.FIRST_NAME, S.LAST_NAME
+ORDER BY s.student_ID
+;
+
+
+/*12*/
+SELECT COUNT(*) NUMBEROFINSTRUCTORS
+FROM
+    (SELECT i.instructor_id, COUNT(*)
+    FROM Instructor i, section s, enrollment e
+    WHERE i.INSTRUCTOR_ID = s.INSTRUCTOR_ID
+    AND  s.SECTION_ID = e.SECTION_ID
+   AND s.LOCATION = 'L211'
+    GROUP BY i.instructor_id
+    HAVING COUNT(*) > 3)
+;
+
+/*13*/
+SELECT salutation || '. '|| first_name ||' '|| last_name AS INSTRUCTOR, TO_CHAR(i.PHONE, '000g000g0000', 'NLS_numeric_characters=.-') PHONE
+FROM instructor i, section s, course c
+WHERE i.instructor_id = s.instructor_id
+AND c.course_no = s.course_no
+GROUP BY salutation || '. '|| first_name ||' '|| last_name, phone
+Having COUNT(*) =
+    (SELECT MIN(i)
+    FROM
+    (SELECT i.instructor_id, COUNT(*) AS i
+        FROM instructor i, section s, course c
+        WHERE i.instructor_id = s.instructor_id
+          AND c.course_no = s.course_no
+          AND i.instructor_id  IN    
+              (SELECT i.instructor_id
+              FROM course c, instructor i, section s
+              WHERE c.course_no = s.course_no
+                AND i.instructor_id = s.instructor_id
+                AND c.course_no = '142')
+              GROUP BY i.instructor_id));
+
+
+/*14*/
+SELECT s.first_name, s.last_name, sec.section_id, sec.course_no 
+FROM student s, enrollment e, section sec,  
+        (SELECT t1.student_id, t1.section_id, grades
+        FROM 
+        (SELECT student_id, section_id 
+        FROM enrollment
+        )t1
+LEFT JOIN
+        (SELECT student_id, section_id, count(*) AS Grades
+        FROM grade 
+        Group BY student_id, section_id)t2
+        ON t1.student_id =t2.student_id 
+        AND t1.section_id = t2.section_id 
+        WHERE grades is NULL)t3
+WHERE s.student_id = e.student_id 
+and e.section_id = sec.section_id 
+and t3.student_id = e.student_id 
+AND t3.section_id = e.section_id 
+;
+
+/*15*/
+
+SELECT STARTTIME, COUNT(*) NUMBER_OF_COURSES
+FROM
+(SELECT DISTINCT to_char(start_date_time, 'HH:MIAM') AS STARTTIME, course_no
+FROM section
+GROUP BY start_date_time, course_no)
+GROUP BY STARTTIME
+ORDER BY STARTTIME;
+
+
+
+

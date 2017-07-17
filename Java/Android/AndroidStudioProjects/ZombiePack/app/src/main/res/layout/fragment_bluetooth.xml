@@ -1,0 +1,44 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.weber.jamespainter.zombiepack.BluetoothFragment"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_connectDevice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/holo_green_light"
+        android:text="Turn On BlueTooth"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <Button
+        android:id="@+id/btn_DisconnectDevice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/holo_green_light"
+        android:text="Turn Off BlueTooth"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <Button
+        android:id="@+id/btn_Discoverable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/holo_green_light"
+        android:text="Turn Off BlueTooth"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="0dp" />
+
+
+    <ListView
+        android:id="@+id/lv_listOfDevices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ></ListView>
+
+
+
+</LinearLayout>

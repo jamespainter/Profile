@@ -1,0 +1,522 @@
+-- PART II - XML
+-- James Painter 7/27/2016
+-- Comments
+
+USE Master 
+
+IF EXISTS(SELECT * FROM sysdatabases WHERE name ='Painter_FARMS')
+DROP DATABASE Painter_FARMS
+
+GO
+
+CREATE DATABASE Painter_FARMS
+
+--ON PRIMARY 
+--(
+--NAME = 'Painter_FARMS', 
+----FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL11.MSSQLSERVER\MSSQL\DATA\Painter_FARMS.mdf',
+--FILENAME = 'C:\Stage\Painter_FARMS.mdf',
+--SIZE = 4MB, 
+--MAXSIZE = 4MB,
+--FILEGROWTH= 500KB
+--)
+
+--LOG ON 
+
+--(
+--NAME = 'Painter_FARMS_Log', 
+--FILENAME = 'C:\Stage\Painter_FARMS.ldf',
+--SIZE = 4MB, 
+--MAXSIZE = 4MB, 
+--FILEGROWTH = 500KB
+--)
+Go
+
+--Create Tables
+USE Painter_FARMS
+
+CREATE TABLE GUEST
+(
+GuestID				smallint	NOT NULL	IDENTITY(1500,1), 
+GuestFirstName		varchar(20)	NOT NULL,
+GuestLastName		varchar(20)	NOT NULL, 
+GuestAddress1		varchar(30)	NOT NULL,
+GuestAddress2		varchar(10) NULL, 
+GuestCity			varchar(20) NOT NULL, 
+GuestState			varchar(2) NULL, 
+GuestPostalCode		char(10) NOT NULL, 
+GuestCountry		varchar(20) NOT NULL, 
+GuestPhone			varchar(20) NOT NULL, 
+GuestEmail			varchar(30) NULL,
+GuestComments		varchar(200) NULL	
+)
+
+
+CREATE TABLE ROOMTYPE
+(
+RoomTypeID			smallint NOT NULL	IDENTITY(1,1), 
+RTDescription		varchar(200)	NOT NULL,
+
+)
+
+
+CREATE TABLE TAXRATE
+(
+TaxLocationID		smallint NOT NULL IDENTITY(1,1), 
+TaxDescription		varchar(30) NOT NULL, 
+RoomTaxRate			decimal(6,4),
+SalesTaxRate		decimal(6,4),
+)
+
+CREATE TABLE BILLINGCATEGORY
+(
+BillingCategoryID		smallint NOT NULL IDENTITY(1,1), 
+BillingCatDescription	varchar(30) NOT NULL, 
+BillingCatTaxable		bit	NOT NULL
+)
+
+CREATE TABLE DISCOUNT
+(
+DiscountID			smallint NOT NULL IDENTITY(1,1), 
+DiscountDescription	varchar(50) NOT NULL, 
+DiscountExpiration	date NOT NULL,
+DiscountRules		varchar(100) NULL, 
+DiscountPercent		decimal(4,2) NULL, 
+DiscountAmount		smallmoney NULL
+)
+
+CREATE TABLE CREDITCARD
+(
+CreditCardID		smallint NOT NULL IDENTITY(1,1), 
+GuestID				smallint NOT NULL, 
+CCTYPE				varchar(5) NOT NULL, 
+CCNumber			varchar(16) NOT NULL, 
+CCCompany			varchar(40) NULL, 
+CCCardHolder		varchar(40) NOT NULL, 
+CCExpiration		smalldatetime NOT NULL, 
+)
+
+CREATE TABLE RESERVATION
+(
+ReservationID		smallint NOT NULL IDENTITY(5000,1),
+ReservationDate		date	NOT NULL, 
+ReservationStatus	char(1) NOT NULL,
+ReservationComments	varchar(200) NULL, 
+CreditCardID		smallint NOT NULL, 
+)
+
+CREATE TABLE FOLIO
+(
+FolioID				smallint NOT NULL IDENTITY(1,1),
+ReservationID		smallint NOT NULL, 
+GuestID				smallint NOT NULL, 
+RoomID				smallint NOT NULL, 
+QuotedRate			smallmoney NOT NULL, 
+CheckinDate			smalldatetime NOT NULL, 
+Nights				tinyint NOT NULL, 
+Status				char(1) NOT NULL, 
+Comments			varchar(200) NULL, 
+DiscountID			smallint NOT NULL				
+)
+
+CREATE TABLE PAYMENT 
+(
+PaymentID			smallint NOT NULL IDENTITY(8000,1),
+FolioID				smallint NOT NULL, 
+PaymentDate			date NOT NULL, 
+PaymentAmount		smallmoney NOT NULL, 
+PaymentComments		varchar(200) NULL
+)
+
+CREATE TABLE ROOM 
+(
+RoomID				 smallint NOT NULL IDENTITY(1,1), 
+RoomNumber			 varchar(5) NOT NULL, 
+RoomDescription		 varchar(200) NOT NULL, 
+RoomSmoking			 bit NOT NULL, 
+RoomBedConfiguration char(2) NOT NULL, 
+HotelID				 smallint NOT NULL,
+RoomTypeID			smallint NOT NULL
+)
+
+CREATE TABLE BILLING 
+(
+FolioBillingID	smallint NOT NULL IDENTITY(1,1),
+FolioID					smallint NOT NULL, 
+BillingCategoryID		smallint NOT NULL, 
+BillingDescription		char(30) NOT NULL, 
+BillingAmount			smallmoney NOT NULL, 
+BillingItemQty			tinyint NOT NULL, 
+BillingItemDate			date NOT NULL
+)
+
+CREATE TABLE HOTEL
+(
+HotelID				smallint NOT NULL, 
+HotelName			varchar(30) NOT NULL, 
+HotelAddress		varchar(30) NOT NULL, 
+HotelCity			varchar(20)	NOT NULL, 
+HotelState			varchar(2)	NULL, 
+HotelCountry		varchar(20) NOT NULL, 
+HotelPostalCode		char(10) NOT NULL, 
+HotelStarRating		char(1) NULL, 
+HotelPictureLink	varchar(100) NULL, 
+TaxLocationID		smallint NOT NULL
+)
+
+CREATE TABLE RACKRATE 
+(
+RackRateID			smallint NOT NULL IDENTITY(1,1), 
+RoomTypeID			smallint NOT NULL, 
+HotelID				smallint NOT NULL, 
+RackRate			smallmoney NOT NULL, 
+RackRateBegin		date NOT NULL, 
+RackRateEnd			date NOT NULL,
+RackRateDescription	varchar(200) NOT NULL 
+)
+Go
+
+-- Create Primary Keys
+
+ALTER TABLE GUEST
+	ADD CONSTRAINT PK_GGuestID
+	PRIMARY KEY	(GuestID)
+
+ALTER TABLE ROOMTYPE
+	ADD CONSTRAINT PK_RTRoomTypeID
+	PRIMARY KEY (RoomTypeID)
+
+ALTER TABLE TAXRATE
+	ADD CONSTRAINT PK_TRTaxLocationID
+	PRIMARY KEY (TaxLocationID)
+
+ALTER TABLE BILLINGCATEGORY
+	ADD CONSTRAINT PK_BCBillingCategoryID
+	PRIMARY KEY (BillingCategoryID) 
+
+ALTER TABLE DISCOUNT
+	ADD CONSTRAINT PK_DDiscountID
+	PRIMARY KEY (DiscountID) 
+
+ALTER TABLE CREDITCARD
+	ADD CONSTRAINT PK_CCCreditCardID
+	PRIMARY KEY (CreditCardID)
+
+ALTER TABLE RESERVATION
+	ADD CONSTRAINT PK_RReservationID
+	PRIMARY KEY (ReservationID) 
+
+ALTER TABLE FOLIO
+	ADD CONSTRAINT PK_FFolioID
+	PRIMARY KEY (FolioID) 
+
+ALTER TABLE PAYMENT 
+	ADD CONSTRAINT PK_PPaymentID
+	PRIMARY KEY (PaymentID) 
+
+ALTER TABLE ROOM
+	ADD CONSTRAINT PK_RRoomID
+	PRIMARY KEY (RoomID) 
+
+ALTER TABLE BILLING
+	ADD CONSTRAINT PK_BFolioBillingID
+	PRIMARY KEY	(FolioBillingID)
+
+ALTER TABLE HOTEL
+	ADD CONSTRAINT PK_HHotelID
+	PRIMARY KEY	(HotelID) 
+
+ALTER TABLE RACKRATE
+	ADD CONSTRAINT PK_RRackRateID
+	PRIMARY KEY (RackRateID) 
+
+GO
+
+-- CREATE FOREIGN KEYS 
+
+ALTER TABLE CREDITCARD
+ADD
+CONSTRAINT FK_CCGuestID
+FOREIGN KEY (GuestID) REFERENCES GUEST (GuestID)
+ON UPDATE Cascade
+ON DELETE Cascade
+
+
+ALTER TABLE RESERVATION
+ADD
+CONSTRAINT FK_RCreditCardID
+FOREIGN KEY (CreditCardID) REFERENCES CREDITCARD (CreditCardID)
+ON UPDATE Cascade
+ON DELETE Cascade
+
+
+ALTER TABLE FOLIO
+ADD
+CONSTRAINT FK_FReservationID
+FOREIGN KEY (ReservationID) REFERENCES RESERVATION (ReservationID) 
+ON UPDATE Cascade
+ON DELETE Cascade,
+
+CONSTRAINT FK_FRoomID
+FOREIGN KEY (RoomID) REFERENCES ROOM (RoomID) 
+ON UPDATE Cascade
+ON DELETE Cascade,
+
+CONSTRAINT FK_FDiscountID
+FOREIGN KEY (DiscountID) REFERENCES DISCOUNT (DiscountID)
+ON UPDATE Cascade
+ON DELETE Cascade
+
+
+ALTER TABLE PAYMENT
+ADD
+CONSTRAINT FK_PFolioID
+FOREIGN KEY (FolioID) REFERENCES FOLIO (FolioID)
+ON UPDATE Cascade
+ON DELETE Cascade
+
+
+ALTER TABLE ROOM
+ADD
+CONSTRAINT FK_RHotelID
+FOREIGN KEY (HotelID) REFERENCES HOTEL (HotelID)
+ON UPDATE Cascade
+ON DELETE Cascade,
+
+CONSTRAINT FK_RTRoomID
+FOREIGN KEY (RoomTypeID) REFERENCES ROOMTYPE (RoomTypeID) 
+ON UPDATE Cascade 
+ON DELETE Cascade 
+
+
+
+ALTER TABLE BILLING
+ADD
+CONSTRAINT FK_BFolioID
+FOREIGN KEY (FolioID) REFERENCES FOLIO (FolioID)
+ON UPDATE Cascade
+ON DELETE Cascade,
+ 
+
+CONSTRAINT FK_BBillingCategoryID
+FOREIGN KEY (BillingCategoryID) REFERENCES BILLINGCATEGORY (BillingCategoryID)
+ON UPDATE Cascade
+ON DELETE Cascade
+
+
+ALTER TABLE HOTEL
+ADD
+CONSTRAINT FK_HTaxLocationID
+FOREIGN KEY (TaxLocationID)	REFERENCES TAXRATE (TaxLocationID)
+ON UPDATE Cascade
+ON DELETE Cascade
+
+ALTER TABLE RACKRATE
+ADD
+CONSTRAINT FK_RRRoomTypeID
+FOREIGN KEY (RoomTypeID) REFERENCES ROOMTYPE (RoomTypeID)
+ON UPDATE Cascade
+ON DELETE Cascade,
+ 
+
+CONSTRAINT FK_RRHotelID
+FOREIGN KEY (HotelID) REFERENCES HOTEL (HotelID) 
+ON UPDATE Cascade
+ON DELETE Cascade
+
+GO 
+
+-- Check and Balances 
+
+ALTER TABLE RESERVATION
+ADD CONSTRAINT CK_RReservationStatus
+CHECK(ReservationStatus IN('R','A','B','C','X'))
+
+ALTER TABLE FOLIO
+ADD CONSTRAINT CK_FStatus
+CHECK(Status IN('R','A','B','C','X'))
+
+ALTER TABLE ROOM
+ADD CONSTRAINT CK_RRoomBedConfiguration
+CHECK(RoomBedConfiguration IN('K','Q','2Q','2K','2F'))
+
+GO
+
+--BULK INSERT
+
+--SELECT * 
+--FROM ROOM
+
+BULK INSERT BILLING FROM 'C:\stage\Billing.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+
+BULK INSERT BILLINGCATEGORY FROM 'C:\stage\BillingCategory.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+
+BULK INSERT CREDITCARD FROM 'C:\stage\CreditCard.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+
+BULK INSERT DISCOUNT FROM 'C:\stage\Discount.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+
+BULK INSERT FOLIO FROM 'C:\stage\Folio.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+
+BULK INSERT GUEST  FROM 'C:\stage\Guest.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+
+BULK INSERT HOTEL FROM 'C:\stage\Hotel.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+
+BULK INSERT PAYMENT FROM 'C:\stage\Payment.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+
+BULK INSERT RACKRATE FROM 'C:\stage\RackRate.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+
+BULK INSERT RESERVATION FROM 'C:\stage\Reservation.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+
+BULK INSERT ROOM FROM 'C:\stage\Room.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+
+BULK INSERT ROOMTYPE FROM 'C:\stage\RoomType.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+
+BULK INSERT TAXRATE FROM 'C:\stage\TaxRate.txt' WITH (FIELDTERMINATOR='|',FIRSTROW=1)
+
+GO
+
+
+--PART II - XML 
+
+--1
+USE Painter_FARMS
+GO
+DECLARE @idoc int 
+DECLARE @xmldoc nvarchar(4000)
+SET @xmldoc ='
+<ROOT>
+		<GUEST>
+
+		<GuestID>4431</GuestID>
+		<GuestFirst>Lacey</GuestFirst>
+		<GuestLast>Byington</GuestLast>
+		<RESERVATIONDETAIL>
+		<CheckInDate>2016-08-02</CheckInDate>
+		<Nights>2</Nights>
+		</RESERVATIONDETAIL>
+
+		</GUEST>
+
+		<GUEST>
+
+		<GuestID>5563</GuestID>
+		<GuestFirst>Jonathan</GuestFirst>
+		<GuestLast>Langford</GuestLast>
+
+		<RESERVATIONDETAIL>
+		<CheckInDate>2016-08-05</CheckInDate>
+		<Nights>2</Nights>
+		</RESERVATIONDETAIL>
+
+		</GUEST>
+
+		<GUEST>
+
+		<GuestID>6680</GuestID>
+		<GuestFirst>Tanner</GuestFirst>
+		<GuestLast>Olson</GuestLast>
+
+		<RESERVATIONDETAIL>
+		<CheckInDate>2015-09-11</CheckInDate>
+		<Nights>3</Nights>
+		</RESERVATIONDETAIL>
+
+		 </GUEST>
+</ROOT>
+'
+EXEC sp_xml_preparedocument @idoc OUTPUT, @xmldoc
+SELECT * FROM OPENXML (@idoc, '/ROOT/GUEST', 2) 
+WITH
+(
+	GuestID varchar(30) 'GuestID',
+	GuestFirst varchar(30) 'GuestFirst',
+	GuestLast varchar(30) 'GuestLast',
+	Checkin date 'RESERVATIONDETAIL/CheckInDate'
+
+)
+EXEC sp_xml_removedocument @idoc
+GO
+
+--2
+SET IDENTITY_INSERT Painter_FARMS.dbo.GUEST ON;
+GO
+DECLARE @idoc1 int 
+DECLARE @xmldoc1 nvarchar(4000)
+SET @xmldoc1 ='
+<ROOT>
+		<GUEST>
+
+		<GuestID>4431</GuestID>
+		<GuestFirst>Lacey</GuestFirst>
+		<GuestLast>Byington</GuestLast>
+		<RESERVATIONDETAIL>
+		<CheckInDate>2016-08-02</CheckInDate>
+		<Nights>2</Nights>
+		</RESERVATIONDETAIL>
+
+		</GUEST>
+
+		<GUEST>
+
+		<GuestID>5563</GuestID>
+		<GuestFirst>Jonathan</GuestFirst>
+		<GuestLast>Langford</GuestLast>
+
+		<RESERVATIONDETAIL>
+		<CheckInDate>2016-08-05</CheckInDate>
+		<Nights>2</Nights>
+		</RESERVATIONDETAIL>
+
+		</GUEST>
+
+		<GUEST>
+
+		<GuestID>6680</GuestID>
+		<GuestFirst>Tanner</GuestFirst>
+		<GuestLast>Olson</GuestLast>
+
+		<RESERVATIONDETAIL>
+		<CheckInDate>2015-09-11</CheckInDate>
+		<Nights>3</Nights>
+		</RESERVATIONDETAIL>
+
+		 </GUEST>
+</ROOT>
+'
+DECLARE @GuestID varchar(30)
+DECLARE @First varchar(30)
+DECLARE @Last varchar(30)
+EXEC sp_xml_preparedocument @idoc1 OUTPUT, @xmldoc1
+SELECT @GuestID = GuestID, @First = GuestFirst, @Last = GuestLast FROM OPENXML (@idoc1, '/ROOT/GUEST', 2) 
+WITH
+(
+	GuestID smallint 'GuestID',
+	GuestFirst varchar(30) 'GuestFirst',
+	GuestLast varchar(30) 'GuestLast'
+	--Checkin date 'RESERVATIONDETAIL/CheckInDate'
+
+)
+--PRINT  @GuestID
+--PRINT @First
+--PRINT @Last
+INSERT INTO GUEST(GuestID, GuestFirstName,GuestLastName,GuestAddress1,GuestAddress2,GuestCity,GuestState,GuestPostalCode,GuestCountry,GuestPhone,GuestEmail,GuestComments)
+VALUES(@GuestID, @First,@Last, '1234', '12343','Provo','UT','84065','USA','385-282-9293','rpainter@painter.com','this is weird')
+EXEC sp_xml_removedocument @idoc1
+GO
+--2A.
+SELECT * FROM GUEST
+GO
+--2B.
+DELETE FROM GUEST where GuestID < 2000
+GO
+--2C.
+SET IDENTITY_INSERT Painter_FARMS.dbo.GUEST OFF;
+GO
+--3.
+USE MASTER
+GO
+IF EXISTS(SELECT * FROM sysdatabases WHERE name ='Painter_FARMS')
+DROP DATABASE Painter_FARMS
+
+
+

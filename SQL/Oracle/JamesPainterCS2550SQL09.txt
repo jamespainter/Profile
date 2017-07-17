@@ -1,0 +1,136 @@
+James Painter 
+CS 2550 
+SQL Assignment 9 
+
+
+/*1*/
+
+SELECT s.student_ID, s.Last_name, s.first_name, s.EMPLOYER
+ FROM student s, enrollment e
+ WHERE s.student_id = e.student_id
+ Group by s.student_ID, s.Last_name, s.first_name, s.EMPLOYER
+ Having Count(*) =
+  (Select Max(enroll) 
+     From 
+        (SELECT count (*) as enroll
+        FROM enrollment 
+        Group by Student_id))
+Order By s.LAST_NAME, s.FIRST_NAME
+;
+
+/*2*/ 
+Select  i.First_Name, i.Last_name, I.phone
+FROM Student s, INSTRUCTOR i,section se, enrollment e
+WHERE s.STUDENT_ID = e.STUDENT_ID
+AND e.SECTION_ID = se.SECTION_ID
+AND i.INSTRUCTOR_ID = se.INSTRUCTOR_ID
+AND s.zip = i.zip
+Order by i.LAST_NAME
+;
+
+
+/*3*/ 
+SELECT i.FIRST_NAME, i.LAST_NAME, z.CITY, 
+ 'Instructor' "ROLE"
+FROM Instructor i , zipcode z
+WHERE I.zip = z.zip 
+AND z.zip = 10025
+UNION 
+SELECT s.FIRST_NAME, s.LAST_NAME, z.CITY,
+'Student' 
+FROM student s , zipcode z 
+WHERE s.zip = z.zip 
+AND z.zip = 10025
+Order BY ROLE, Last_NAME, First_NAME 
+;
+
+/*4*/
+
+SELECT s.Location, COUNT(*)AS SECTIONS, SUM(ST.STUDENTS) AS STUDENTS 
+FROM SECTION s, (SELECT section_ID, COUNT(*) AS STUDENTS
+FROM ENROLLMENT 
+GROUP BY Section_ID) ST
+WHERE s.section_ID = st.section_ID(+)
+GROUP BY s.location
+ORDER BY s.location
+;
+
+/*5*/
+SELECT GRADE_TYPE_CODE, to_char(NUMERIC_GRADE,'99.00')AS GRADE
+FROM GRADE  
+WHERE STUDENT_ID = 112
+AND SECTION_ID = 95
+UNION ALL 
+select 'Average for student 112 is', to_char(avg(Numeric_grade), 99.99)
+FROM GRADE 
+WHERE STUDENT_ID = 112
+AND SECTION_ID = 95
+ORDER BY GRADE_TYPE_CODE DESC;
+
+/*6*/
+SELECT first_name, last_name, sections 
+from instructor i 
+left outer join
+(select instructor_id, Count(*) SECTIONS 
+FROM Section 
+GROUP BY instructor_ID) s
+on i.instructor_id = s.instructor_id 
+order by last_name;
+
+/*7*/
+select course_no
+from (select DISTINCT c.COURSE_NO,g.GRADE_TYPE_CODE
+from course c, section s, grade_type_weight gw, grade g
+where c.COURSE_NO=s.COURSE_NO
+and s.SECTION_ID=gw.SECTION_ID
+and gw.SECTION_ID=g.SECTION_ID
+and gw.GRADE_TYPE_CODE=g.GRADE_TYPE_CODE
+order by c.COURSE_NO)
+group by COURSE_NO
+having count(*)=
+(select count(*)
+from grade_type)
+order by course_no;
+
+/*8*/
+select course_no
+from (select DISTINCT c.COURSE_NO,g.GRADE_TYPE_CODE
+from course c, section s, grade_type_weight gw, grade g
+where c.COURSE_NO=s.COURSE_NO
+and s.SECTION_ID=gw.SECTION_ID
+and gw.SECTION_ID=g.SECTION_ID
+and gw.GRADE_TYPE_CODE=g.GRADE_TYPE_CODE
+order by c.COURSE_NO)
+group by COURSE_NO
+having count(*)=
+(select count(*)
+from grade_type)
+order by course_no;
+
+
+
+/*9*/
+SELECT t1.COURSE_NO, description, NVL(enrollments, 0) enrollments 
+FROM  
+(select course_no, description 
+FROM course c
+WHERE DESCRIPTION LIKE '%Programming%') t1
+LEFT OUTER JOIN 
+(SELECT s.course_no, COUNT(*) enrollments 
+FROM enrollment e, section s
+WHERE e.section_ID = s.section_ID 
+Group BY s.course_no)t2
+on t1.course_no = t2.course_no 
+order by t1.course_no
+;
+
+/*10*/
+select s.STUDENT_ID,s.FIRST_NAME,s.LAST_NAME,nvl(to_char(ENROLLMENTS),'none') AS Enrollments
+from student s
+left outer join
+(select STUDENT_ID,count(*) ENROLLMENTS
+from enrollment
+group by student_id)e
+on e.student_id = s.student_id
+where s.phone like '%617%'
+order by s.last_name,s.FIRST_NAME;

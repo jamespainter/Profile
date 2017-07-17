@@ -1,0 +1,29 @@
+CREATE TRIGGER tr_PlayerNameLookup ON GOLF_PLAYER
+AFTER UPDATE, INSERT 
+AS 
+DECLARE @FirstName varchar(20)
+DECLARE @LastName	varchar(20) 
+DECLARE @PlayerID	smallint
+IF EXISTS (SELECT '' 
+			FROM inserted i 
+			)
+
+BEGIN
+SELECT @FirstName = (SELECT PlayerFirstName FROM inserted)
+SELECT @LastName = (SELECT PlayerLastName FROM inserted)
+SELECT @PlayerID = (SELECT PlayerID FROM inserted)
+EXEC sp_GuestLookup @FirstName, @LastName, @PlayerID
+END
+
+--TEST TRIGGER 
+
+INSERT INTO GOLF_PLAYER
+VALUES('Anita', 'Proul',1524,32, '6743 Pk Place','SaltLate', '84601', 'USA', '801-957-4769')
+GO
+
+INSERT INTO GOLF_PLAYER
+VALUES('Ted', 'Cowan',1524,32, '4462 Maybeck Place','Provo', '84241', 'USA', '801-957-4769')
+GO 
+
+INSERT INTO GOLF_PLAYER
+VALUES('Riley', 'Painter',1555,15, '3575 S IOWA','Ogden', '84403', 'USA', '801-542-4769')

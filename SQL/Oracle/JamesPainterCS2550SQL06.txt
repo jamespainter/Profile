@@ -1,0 +1,187 @@
+James Painter 
+CS2550 SQL 06 
+10/16/2014
+
+
+/*1*/
+
+SELECT e.STUDENT_ID
+FROM Enrollment e, section s,course c
+    WHERE e.section_id = s.section_id 
+    AND s.course_no = c.course_no
+    AND c.course_no BETWEEN 100 AND 199
+    Group BY E.student_ID
+    HAVING COUNT(*) = 
+(SELECT Max(Enrolled) 
+FROM 
+(SELECT  Count(*) AS ENROLLED
+FROM Enrollment e, section s,course c
+    WHERE e.section_id = s.section_id 
+    AND s.course_no = c.course_no
+    AND c.course_no BETWEEN 100 AND 199
+    Group BY e.student_ID))
+   ;
+
+
+
+/*2*/
+  SELECT st.Student_ID, st.Last_name, st.First_Name 
+  From Student st, enrollment e, section s, grade g
+  WHERE st.student_Id = e.STUDENT_ID
+       AND g.section_id = e.section_id
+       AND g.student_id = e.student_id 
+      AND e.section_id = s.section_id 
+      AND s.section_id = 100 
+      AND s.course_no = 230 
+      AND g.grade_type_code = 'FI'
+   And NUMERIC_GRADE =  
+     (SELECT Max(g.numeric_grade)
+     FROM GRADE g, enrollment e, section s
+     WHERE g.section_id = e.section_id 
+      AND g.student_id = e.student_id 
+      AND e.section_id = s.section_id 
+      AND s.section_id = 100 
+      AND s.course_no = 230 
+      AND g.grade_type_code = 'FI')
+      ;
+
+/*3*/
+
+ SELECT Salutation, First_name, Last_name, zip 
+ FROM instructor
+ where instructor_id NOT IN 
+  (select instructor_id 
+  from section) 
+  ;
+
+/*4*/
+
+   Select s.last_name, g.numeric_grade
+   FROM student s, enrollment e, grade g
+   where s.student_Id = e.student_ID 
+   AND e.student_id = g.student_id 
+   AND e.section_id = g.section_id 
+   AND g.grade_type_code = 'FI'
+   AND e.section_Id = 90
+   AND g.numeric_grade > 
+  
+    (SELECT AVG(numeric_grade)
+    FROM grade 
+    WHERE section_Id = 90
+    AND Grade_type_code = 'FI')
+    Order BY  last_name 
+    ;
+
+/*5*/
+ SELECT c.course_no, c.description
+  FROM course c, section s, ENROLLMENT e
+  WHERE c.course_no = s.COURSE_NO
+  AND s.SECTION_ID = e.SECTION_ID
+  GROUP BY c.COURSE_NO, c.description 
+   HAVING Count(*) =
+        (Select Min(Enroll)
+        FROM 
+       (SELECT c.course_no, Count(*) AS Enroll
+        FROM course c, section s, ENROLLMENT e
+        WHERE c.course_no = s.COURSE_NO
+        AND s.SECTION_ID = e.SECTION_ID
+        GROUP BY c.course_no))
+ORDER BY c.course_no
+   ;
+
+/*6*/
+
+SELECT course_no, description 
+from Course 
+WHERE Course_No in
+    (SELECT course_no
+    FROM section 
+    WHERE To_Char(START_DATE_TIME, 'HH:MI AM') = '10:30 AM') 
+ORDER BY COURSE_NO
+;
+
+/*7*/
+SELECT s.student_ID, s.LAST_NAME 
+FROM grade g, enrollment e, student s 
+WHERE g.STUDENT_ID = e.student_Id
+  AND g.SECTION_ID = e.SECTION_ID
+  AND e.student_ID = s.student_ID 
+  AND g.GRADE_CODE_OCCURRENCE = 3
+      AND g.SECTION_ID = 120
+      AND g.GRADE_TYPE_CODE = 'QZ'
+      GROUP BY s.student_ID, s.LAST_NAME
+      HAVING AVG(g.numeric_grade) <
+      (Select AVG(g.Numeric_grade)
+      FROM grade g 
+      WHERE  g.GRADE_CODE_OCCURRENCE = 3
+      AND g.SECTION_ID = 120
+      AND g.GRADE_TYPE_CODE = 'QZ')
+;
+
+
+
+
+/*8*/
+SELECT First_name, last_name, phone 
+FROM student 
+WHERE student_id IN  
+        (SELECT e.student_id 
+        FROM  enrollment e, section s, course c 
+        WHERE  e.SECTION_ID = s.SECTION_ID
+            AND s.COURSE_NO = c.COURSE_NO
+            AND c.description LIKE 'Systems Analysis')
+    AND student_id in
+        (SELECT e.student_id 
+        FROM  enrollment e, section s, course c 
+        WHERE  e.SECTION_ID = s.SECTION_ID
+            AND s.COURSE_NO = c.COURSE_NO
+            AND c.description LIKE '%Project Management%')
+    ORDER BY last_name
+        ;
+
+
+
+/*9*/
+SELECT DISTINCT i.first_name, i.last_name, c.course_no, c.description 
+FROM instructor i, section s, course c 
+WHERE i.INSTRUCTOR_ID = s.INSTRUCTOR_ID
+  AND s.COURSE_NO = c.COURSE_NO
+  AND c.description LIKE '%Java%'
+  AND i.instructor_id IN 
+  
+           ( SELECT i.INSTRUCTOR_ID
+          FROM instructor i, section s, course c 
+          WHERE i.INSTRUCTOR_ID = s.INSTRUCTOR_ID
+            AND s.COURSE_NO = c.COURSE_NO
+            AND c.description LIKE '%Java%'
+            GROUP BY i.INSTRUCTOR_ID
+            HAVING COUNT (*) =
+                   (SELECT MAX(Courses_taught)
+                   FROM(
+                  SELECT COUNT(*) AS Courses_taught
+                  FROM instructor i, section s, course c 
+                  WHERE i.INSTRUCTOR_ID = s.INSTRUCTOR_ID
+                    AND s.COURSE_NO = c.COURSE_NO
+                    AND c.description LIKE '%Java%'
+                  GROUP BY i.instructor_id)))
+ORDER BY i.FIRST_NAME, i.LAST_NAME, c.DESCRIPTION;
+
+/*10*/
+
+  SELECT s.Student_ID, s.first_name, s.LAST_NAME
+  FROM   Grade g, enrollment e, student s 
+  WHERE g.SECTION_ID = e.SECTION_ID
+          AND g.STUDENT_ID = e.STUDENT_ID
+          AND e.STUDENT_ID = s.STUDENT_ID
+          AND g.GRADE_TYPE_CODE = 'FI'
+          AND e.SECTION_ID = '117'
+          GROUP BY s.student_ID, s.first_name, s.Last_name
+          Having AVG(g.numeric_grade) >
+      (SELECT AVG(g.numeric_grade) 
+      FROM Grade g, enrollment e, student s 
+      WHERE g.SECTION_ID = e.SECTION_ID
+          AND g.STUDENT_ID = e.STUDENT_ID
+          AND e.STUDENT_ID = s.STUDENT_ID
+          AND g.GRADE_TYPE_CODE = 'FI'
+          AND e.SECTION_ID = '117')
+      ; 

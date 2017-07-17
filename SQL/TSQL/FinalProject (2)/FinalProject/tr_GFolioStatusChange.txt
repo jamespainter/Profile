@@ -1,0 +1,37 @@
+--START TRIGGER tr_GFolioStatusChange 
+
+CREATE TRIGGER tr_GFolioStatusChange ON GOLF_FOLIO
+AFTER INSERT, UPDATE 
+AS
+		IF EXISTS(SELECT '' FROM inserted i WHERE i.Status = 'C' OR i.Status = 'D' )
+
+
+BEGIN 
+		DECLARE @Checkn smalldatetime
+		DECLARE @StatC char(1) 
+		DECLARE @FolioID smallint 
+		SET @FolioID = (SELECT i.GFolioID FROM inserted i )
+		SET @Checkn = (SELECT i.TeeTimeCheckinDate FROM inserted i )
+		IF(SELECT i.Status FROM inserted i) = 'C' 
+		BEGIN 
+			--SET @StatC = (SELECT i.Status FROM inserted i WHERE i.Status = 'C') 
+			EXEC sp_CreateGolfBIll @GFolioID = @FolioID;  
+
+		END 
+		IF(SELECT i.Status FROM inserted i ) = 'D'
+		BEGIN 
+			EXEC sp_applycharges @CheckinDate = @Checkn, @GFolioID = @FolioID
+		END 
+END
+--END TRIGGER tr_GFolioStatusChange
+
+
+--START TEST TRIGGER tr_GFolioStatusChange & SPROC sp_applycharges
+UPDATE GOLF_FOLIO 
+SET TeeTimeCheckinDate = GETDATE()
+WHERE GFolioID = 1501
+UPDATE GOLF_FOLIO 
+SET Status = 'D'
+WHERE GFolioID = 1501
+EXEC sp_CreateGolfBill @GFolioID = 1501;
+--END TEST TRIGGER tr_GFolioStatusChange & SPROC sp_applycharges

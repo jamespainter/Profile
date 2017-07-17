@@ -1,0 +1,104 @@
+﻿@model AARC.ViewModels.ArccView
+
+@{
+    Layout = null;
+}
+
+@*<h2> Login <h2> *@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    @*@Styles.Render("~/Content/css")*@
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <style> 
+
+    body{
+        background-color: aliceblue;
+
+
+    }
+    .container{
+       border-bottom:5px solid black; 
+        
+    }
+    h1{
+        /*margin-left: 47%;*/ 
+    }
+    .email{
+        margin-left: 600px;
+        padding-top: 20px;  
+        font-size: medium;
+        padding-top: 5px; 
+        
+    }
+    .password{
+        margin-left: 576px; 
+        font-size: medium; 
+    }
+    .RegisterLink{
+        margin-left: 650px; 
+
+
+    }
+    .ProposalLink{
+       
+        margin-left:660px; 
+
+    }
+    .LoginHeader{
+
+        background-color: black; 
+        color: white; 
+        margin:inherit; 
+
+
+    }
+    
+
+    </style>
+</head>
+<body>
+  
+   
+    <div class="container" style="font-size:smaller;fill:aquamarine;">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="LoginHeader">
+                <h1>ARCC Committee Member Login</h1>
+            </div>
+            <div class="link-Login">
+                <div class="link1">
+                    @Html.ActionLink("Create Committee Member", "Registration", "ARC", null, new { @class = "RegisterLink" })
+                </div>
+                <div class="link2">
+                    @Html.ActionLink("Proposal Registration", "ProposalRegistration", "ARC", null, new { @class = "ProposalLink" })
+                </div>
+                @Html.ValidationSummary(true, " ", new { @class = "txt-danger" })
+
+                <div class="glyphicon-log-in">
+
+                    <p class="email">
+
+                        @Html.LabelFor(m => m.user.Email, new { htmlAttributes = new { @class = "control-label col-md-2" } })
+                        @Html.TextBoxFor(m => m.user.Email)
+                    </p>
+                    <p class="password">
+                        @Html.LabelFor(m => m.user.Password)
+                        @Html.TextBoxFor(m => m.user.Password)
+                        <input type="submit" value="Login" class="btn_submit" />
+                    </p>
+
+
+                </div>
+            </div>
+        }
+    </div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+1.)
+SELECT SALUTATION, FIRST_NAME, LAST_NAME
+FROM INSTRUCTOR
+Order by LAST_Name, First_name ;
+
+2.)
+SELECT DISTINCT Location
+FROM Section 
+ORDER BY Location;
+
+3.)
+SELECT First_Name, Last_Name 
+FROM Instructor
+WHERE First_Name LIKE 'T%'
+ORDER BY Last_NAME DESC;
+
+4.)
+SELECT Phone, First_Name|| ' '|| Last_Name AS "Full Name", Employer
+FROM Student 
+Where Last_Name LIKE 'Torr%'
+ORDER BY Employer;
+
+5.)
+SELECT Course_no, Description
+from course
+WHERE prerequisite = 350
+ORDER BY Course_no;
+
+6.)
+SELECT Course_NO, Description, Cost
+FROM Course
+Where Course_No BETWEEN 200 AND 299 
+AND Cost < 1100
+ORDER BY Course_No; 
+
+7.)
+SELECT Course_NO, Section_ID, Location 
+FROM Section
+WHERE COURSE_NO BETWEEN 100 AND 199
+AND Location IN ('L214','L509')
+ORDER BY Course_NO;
+
+8.)
+SELECT Course_NO, Section_ID, Capacity 
+FROM Section
+WHERE Capacity IN (12,15)
+ORDER BY Course_No, Section_ID
+;
+
+9.)
+SELECT Student_ID, NUMERIC_GRADE
+FROM GRADE
+WHERE SECTION_ID IN( 141) AND GRADE_TYPE_CODE = 'MT'
+ORDER BY Student_ID, NUMERIC_GRADE
+;
+
+10.)
+SELECT COURSE_NO, DESCRIPTION
+FROM COURSE
+WHERE COURSE_NO BETWEEN 300 AND 399 AND PREREQUISITE IS NOT Null
+ORDER BY Description
+;
+

@@ -1,0 +1,127 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.weber.jamespainter.cs3270a3.TopFragment"
+    android:orientation="vertical"
+  >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/title"
+
+        android:id="@+id/title"
+        android:textSize="24sp"
+        android:textColor="@color/colorAccent"
+
+        android:fontFamily="sans-serif" />
+
+
+    <LinearLayout
+        android:layout_width="500dp"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+
+        >
+
+    <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/ThePhone"
+            android:layout_weight="1"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="20sp"
+            android:textColor="@android:color/background_dark"
+            />
+
+    <TextView
+        android:id="@+id/tv_phone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/PhoneUser"
+        android:layout_weight="2.5"
+        android:textSize="20sp"
+        android:textColor="@color/colorAccent"
+        android:layout_marginTop="20dp"
+        />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="500dp"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+
+        >
+
+        <Button
+            android:id="@+id/btn_play"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Play"
+            android:layout_marginLeft="60dp"
+            android:layout_weight="0.18"
+
+        />
+
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_button"
+        android:text=""
+        android:layout_marginLeft="35dp"
+        android:layout_weight="1"
+        android:textColor="@color/colorAccent"
+        android:textSize="20dp"
+
+        />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="500dp"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+
+        >
+    <TextView
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:text="@string/me"
+    android:textColor="@android:color/black"
+    android:textSize="20sp"
+    android:id="@+id/tv_me"
+    android:layout_marginLeft="85dp"
+    android:layout_weight="1"
+
+    />
+
+    <TextView
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/PhoneUser"
+        android:layout_weight="9.5"
+        android:textSize="20sp"
+        android:textColor="@color/colorAccent"
+        android:layout_marginLeft="35dp"
+        android:id="@+id/tv_user"
+        />
+        <!--<Spinner-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical"-->
+        <!--android:id="@+id/spin_user"-->
+        <!--android:addStatesFromChildren="true"-->
+        <!--android:layout_weight="5.5"-->
+
+            <!--/>-->
+
+    </LinearLayout>
+
+</LinearLayout>

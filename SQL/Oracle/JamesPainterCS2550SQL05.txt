@@ -1,0 +1,102 @@
+	James Painter 
+	CS2550 
+	SQL 05
+	10/09/2014
+
+/*1*/
+SELECT s.FIRST_NAME, s.LAST_NAME, s.Phone
+FROM STUDENT s, ZIPCODE z
+WHERE s.zip = z.zip
+ AND z.CITY LIKE 'Newark%'
+ORDER BY s.LAST_NAME;
+
+/*2*/
+SELECT c.COURSE_NO, c.PREREQUISITE, p.DESCRIPTION
+FROM course c , course p
+WHERE c.PREREQUISITE = p.COURSE_NO
+ AND c.COURSE_NO like '3%'
+ORDER BY c.PREREQUISITE
+;
+
+/*3*/
+SELECT s.course_no, c.description 
+FROM course c , section s, instructor i
+WHERE c.course_no = s.course_NO
+  AND s.INSTRUCTOR_ID = i.instructor_ID
+  AND s.COURSE_NO between '100' AND '199'
+  AND i.last_name =  'Lowry'
+  ORDER BY c.COURSE_NO
+  ;
+
+/*4*/
+SELECT DISTINCT w.GRADE_TYPE_CODE, gr.description ,w.NUMBER_PER_SECTION
+FROM course c, Section s, GRADE_TYPE_WEIGHT w, GRADE g, Grade_Type gr
+WHERE c.COURSE_NO = s.COURSE_NO
+  AND s.SECTION_ID = w.SECTION_ID
+  AND w.GRADE_TYPE_CODE = g.GRADE_TYPE_CODE
+  AND g.GRADE_TYPE_CODE = gr.GRADE_TYPE_CODE
+  AND c.COURSE_NO = '144' 
+ORDER BY gr.DESCRIPTION
+;
+
+/*5*/
+SELECT s.STUDENT_ID, s.LAST_NAME||', '||s.first_name AS STUDENT_NAME 
+ FROM Student s, ENROLLMENT e, grade g
+WHERE s.student_ID =  e.STUDENT_ID
+      AND e.STUDENT_ID = g.student_ID
+GROUP BY s.STUDENT_ID, s.FIRST_NAME, s.LAST_NAME
+HAVING  AVG(g.NUMERIC_GRADE) > 93
+ORDER BY STUDENT_NAME
+;
+
+/*6*/
+SELECT i.FIRST_NAME, i.LAST_NAME, i.STREET_ADDRESS, z.CITY, z.STATE, z.ZIP
+FROM ZIPCODE z, INSTRUCTOR i, Section s
+WHERE z.zip = i.zip 
+  AND i.INSTRUCTOR_ID = s.INSTRUCTOR_ID 
+GROUP BY i.FIRST_NAME, i.LAST_NAME, i.STREET_ADDRESS, z.CITY, z.STATE, z.ZIP
+HAVING COUNT (*) < 10 ;
+
+/*7*/
+SELECT c.course_NO, Count (*) AS ENROLLED
+FROM course c, section s, ENROLLMENT e, student d 
+WHERE c.COURSE_NO = s.COURSE_NO
+    AND s.SECTION_ID = e.SECTION_ID
+    AND e.STUDENT_ID = d.STUDENT_ID
+    AND c.PREREQUISITE IS NULL
+  GROUP BY c.course_No
+  ORDER BY ENROLLED DESC
+    ; 
+
+/*8*/
+    SELECT DISTINCT s.FIRST_NAME, s.LAST_NAME, phone
+FROM ZIPCODE z, Student s, Enrollment e
+WHERE z.zip = s.ZIP
+    AND s.STUDENT_ID = e.STUDENT_ID
+    AND z.CITY = 'Flushing' AND z.State = 'NY'
+    AND TO_CHAR(e.enroll_Date, 'MON-DD-YY') = 'FEB-02-07'
+    AND TO_CHAR(e.ENROLL_DATE, 'HH:MI AM') < '10:20 AM' 
+ORDER BY s.LAST_NAME, s.FIRST_NAME
+    ;
+
+/*9*/
+select c.course_no, c.description
+   from grade_type_weight g, section s, course c, grade_type b
+   where g.section_id = s.section_id
+   and s.course_no = c.course_no
+   and b.grade_type_code = g.grade_type_code
+   and b.description = 'Project'
+   order by c.course_no;
+
+
+
+/*10*/
+
+Select MAX(gr.NUMERIC_GRADE) AS  HIGHEST_FINAL_GRADE
+FROM Student s, Enrollment e, Section sc, GRADE_TYPE_WEIGHT g, GRADE gr
+WHERE s.STUDENT_ID = e.student_ID 
+  AND e.SECTION_ID = sc.SECTION_ID
+  AND sc.SECTION_ID = gr.SECTION_ID
+  AND sc.COURSE_NO = 145 
+  AND gr.GRADE_TYPE_CODE = 'FI'
+  ;
